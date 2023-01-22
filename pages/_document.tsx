@@ -7,7 +7,7 @@ export default function Document() {
         <meta name="description" content="PNG Museum" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <body>
+      <body className="bg-gray-800">
         <Main />
         <NextScript />
       </body>
