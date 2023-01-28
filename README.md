@@ -5,12 +5,12 @@ PNGミュージアム用Webシステム
 ## 環境
 
 * Node.js
-* PNPM
+* Yarn
 * Next.js
 
 ##　開発
 
 ```sh
-$ pnpm install
-$ pnpm dev
+$ yarn install
+$ yarn dev
 ```
