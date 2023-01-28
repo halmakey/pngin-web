@@ -3,10 +3,10 @@ frontend:
   phases:
     preBuild:
       commands:
-        - pnpm install
+        - yarn install
     build:
       commands:
-        - pnpm run build
+        - yarn build
   artifacts:
     baseDirectory: .next
     files:
