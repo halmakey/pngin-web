@@ -35,6 +35,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["autoprefixer", "virtual:11aaed2618708cb2f516cb372261d1087babdcf8b99939721e83bb011b21da7ca8ea07ea3d06155f1d2775473fe4d120fcdbe8cd3880d16e22bf95461c85e71a#npm:10.4.13"],\
             ["eslint", "npm:8.32.0"],\
             ["eslint-config-next", "virtual:11aaed2618708cb2f516cb372261d1087babdcf8b99939721e83bb011b21da7ca8ea07ea3d06155f1d2775473fe4d120fcdbe8cd3880d16e22bf95461c85e71a#npm:13.1.3"],\
+            ["nanoid", "npm:4.0.0"],\
             ["next", "virtual:11aaed2618708cb2f516cb372261d1087babdcf8b99939721e83bb011b21da7ca8ea07ea3d06155f1d2775473fe4d120fcdbe8cd3880d16e22bf95461c85e71a#npm:13.1.3"],\
             ["postcss", "npm:8.4.21"],\
             ["prettier", "npm:2.8.3"],\
@@ -3083,6 +3084,13 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["nanoid", "npm:3.3.4"]\
           ],\
           "linkType": "HARD"\
+        }],\
+        ["npm:4.0.0", {\
+          "packageLocation": "./.yarn/cache/nanoid-npm-4.0.0-924f5c6312-7d5946df5c.zip/node_modules/nanoid/",\
+          "packageDependencies": [\
+            ["nanoid", "npm:4.0.0"]\
+          ],\
+          "linkType": "HARD"\
         }]\
       ]],\
       ["natural-compare", [\
@@ -3496,6 +3504,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["autoprefixer", "virtual:11aaed2618708cb2f516cb372261d1087babdcf8b99939721e83bb011b21da7ca8ea07ea3d06155f1d2775473fe4d120fcdbe8cd3880d16e22bf95461c85e71a#npm:10.4.13"],\
             ["eslint", "npm:8.32.0"],\
             ["eslint-config-next", "virtual:11aaed2618708cb2f516cb372261d1087babdcf8b99939721e83bb011b21da7ca8ea07ea3d06155f1d2775473fe4d120fcdbe8cd3880d16e22bf95461c85e71a#npm:13.1.3"],\
+            ["nanoid", "npm:4.0.0"],\
             ["next", "virtual:11aaed2618708cb2f516cb372261d1087babdcf8b99939721e83bb011b21da7ca8ea07ea3d06155f1d2775473fe4d120fcdbe8cd3880d16e22bf95461c85e71a#npm:13.1.3"],\
             ["postcss", "npm:8.4.21"],\
             ["prettier", "npm:2.8.3"],\
