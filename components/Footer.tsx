@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="text-white bg-gray-800 h-80">
       <div className="container mx-auto px-4">
         <Link href="/" className="text-lg">
-        {SITE_TITLE}
+          {SITE_TITLE}
         </Link>
       </div>
     </footer>

@@ -2,13 +2,12 @@ import {
   DynamoDBClient,
   GetItemCommand,
   PutItemCommand,
-  UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
-import { access } from "fs";
+import type { APIUser } from "discord.js";
 import { nanoid } from "nanoid";
+import { getAvatarUrl } from "./discord";
 
 const GUEST_SESSION_AGE = 60 * 60;
-const ACTIVE_SESSION_AGE = 60 * 60 * 24 * 30;
 
 const client = new DynamoDBClient({
   region: process.env.PNGIN_AWS_REGION,
@@ -22,9 +21,13 @@ const TableName = process.env.PNGIN_SESSION_TABLE_NAME;
 export interface Session {
   id: string;
   ttl: number;
-  accessToken?: string;
-  refreshToken?: string;
-  tokenExpiresAt?: number;
+  user?: {
+    id: string;
+    username: string;
+    displayName?: string;
+    discriminator: string;
+    avatarUrl: string | null;
+  };
 }
 
 export async function createSession(): Promise<Session> {
@@ -57,13 +60,36 @@ export async function getSession(id: string): Promise<Session | undefined> {
       },
     })
   );
+
   const item = result.Item;
-  return (
-    item && {
-      id: item.id.S!,
-      ttl: Number(item.ttl.N),
-    }
-  );
+  if (!item) {
+    return undefined;
+  }
+
+  const ttl = Number(item.ttl.N);
+  const userJson = JSON.parse(item.user?.S || "null") as APIUser | null;
+  console.log(userJson);
+
+  if (!userJson) {
+    return {
+      id,
+      ttl,
+    };
+  }
+
+  console.log(userJson);
+
+  return {
+    id,
+    ttl,
+    user: {
+      id: userJson.id,
+      username: userJson.username,
+      displayName: (userJson as any).display_name,
+      discriminator: userJson.discriminator,
+      avatarUrl: userJson.avatar && getAvatarUrl(userJson.id, userJson.avatar),
+    },
+  };
 }
 
 export async function attachDiscordToSession(
@@ -76,7 +102,7 @@ export async function attachDiscordToSession(
     expires_in: number;
   },
   user: {
-    id: string
+    id: string;
   }
 ) {
   const ttl = Math.floor(Date.now() / 1000) + token.expires_in;
@@ -88,7 +114,7 @@ export async function attachDiscordToSession(
         id: { S: id },
         ttl: { N: ttl.toString() },
         token: { S: JSON.stringify(token) },
-        user: { S: JSON.stringify(user)}
+        user: { S: JSON.stringify(user) },
       },
       ConditionExpression: "attribute_exists(id)",
     })

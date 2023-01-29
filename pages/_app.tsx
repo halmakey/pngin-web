@@ -1,6 +1,7 @@
 import { AppProps } from "next/app";
 import "@/styles/globals.css";
 import Head from "next/head";
+import { AuthProvider } from "@/contexts/auth-context";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -10,7 +11,9 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="description" content="PNG Museum" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Component {...pageProps} />
+      <AuthProvider>
+        <Component {...pageProps} />
+      </AuthProvider>
     </>
   );
 }

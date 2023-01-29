@@ -1,12 +1,12 @@
 # PNGin Web System
 
-PNGミュージアム用Webシステム
+PNG ミュージアム用 Web システム
 
 ## 環境
 
-* Node.js
-* Yarn
-* Next.js
+- Node.js
+- Yarn
+- Next.js
 
 ##　開発
 

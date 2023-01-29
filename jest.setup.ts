@@ -1,5 +1,5 @@
-import { loadEnvConfig } from '@next/env'
+import { loadEnvConfig } from "@next/env";
 
 export default async function setup() {
-  loadEnvConfig(process.cwd())
+  loadEnvConfig(process.cwd());
 }

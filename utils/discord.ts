@@ -1,6 +1,4 @@
-import type {
-  APIUser,
-} from "discord.js";
+import type { APIUser } from "discord.js";
 
 const DISCORD_OAUTH_CLIENT_ID = process.env.DISCORD_OAUTH_CLIENT_ID!;
 const DISCORD_OAUTH_REDIRECT_URL = process.env.DISCORD_OAUTH_REDIRECT_URL!;
@@ -45,17 +43,15 @@ export async function authorizeCodeGrant(code: string): Promise<{
   return await normalize(result);
 }
 
-export async function getMe(
-  accessToken: string
-): Promise<APIUser> {
+export async function getMe(accessToken: string): Promise<APIUser> {
   const result = await fetch("https://discord.com/api/users/@me", {
     headers: {
       authorization: "Bearer " + accessToken,
     },
   });
-  return normalize<APIUser>(result)
+  return normalize<APIUser>(result);
 }
 
 export function getAvatarUrl(userId: string, avatar: string) {
-  return `https://cdn.discordapp.com/avatars/${userId}/${avatar}`
+  return `https://cdn.discordapp.com/avatars/${userId}/${avatar}`;
 }

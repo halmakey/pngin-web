@@ -3,7 +3,7 @@ import {
   attachDiscordToSession,
   createSession,
   getSession,
-} from "@/utils/session";
+} from "@/utils/session-store";
 import { createToken } from "@/utils/token";
 import { GetServerSideProps } from "next";
 import nookies from "nookies";
@@ -72,7 +72,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   const sessionToken = createToken(session.id, me.id, token.expires_in);
 
   nookies.set({ res }, "token", sessionToken, {
-    maxAge: token.expires_in
+    maxAge: token.expires_in,
   });
 
   return {
