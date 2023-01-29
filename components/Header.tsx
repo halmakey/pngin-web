@@ -12,7 +12,9 @@ export default function Header() {
           </Link>
         </div>
         <div>
-          <InvertBorderButton>Login</InvertBorderButton>
+          <Link href="/auth?signin" prefetch={false}>
+            <InvertBorderButton>Login</InvertBorderButton>
+          </Link>
         </div>
       </div>
     </header>
