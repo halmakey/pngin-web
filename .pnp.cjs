@@ -30,6 +30,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@aws-sdk/client-dynamodb", "npm:3.259.0"],\
             ["@next/font", "npm:13.1.3"],\
+            ["@types/jsonwebtoken", "npm:9.0.1"],\
             ["@types/node", "npm:18.11.18"],\
             ["@types/react", "npm:18.0.27"],\
             ["@types/react-dom", "npm:18.0.10"],\
@@ -1398,6 +1399,16 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/@types-json5-npm-0.0.29-f63a7916bd-e60b153664.zip/node_modules/@types/json5/",\
           "packageDependencies": [\
             ["@types/json5", "npm:0.0.29"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/jsonwebtoken", [\
+        ["npm:9.0.1", {\
+          "packageLocation": "./.yarn/cache/@types-jsonwebtoken-npm-9.0.1-5f660fdf38-a7f0925e9a.zip/node_modules/@types/jsonwebtoken/",\
+          "packageDependencies": [\
+            ["@types/jsonwebtoken", "npm:9.0.1"],\
+            ["@types/node", "npm:18.11.18"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -4728,6 +4739,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["pngin-web", "workspace:."],\
             ["@aws-sdk/client-dynamodb", "npm:3.259.0"],\
             ["@next/font", "npm:13.1.3"],\
+            ["@types/jsonwebtoken", "npm:9.0.1"],\
             ["@types/node", "npm:18.11.18"],\
             ["@types/react", "npm:18.0.27"],\
             ["@types/react-dom", "npm:18.0.10"],\
