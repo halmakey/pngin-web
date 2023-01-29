@@ -27,6 +27,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+!/.env.test.local
 
 # vercel
 .vercel
@@ -43,3 +44,7 @@ next-env.d.ts
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# keys
+private.ec.key
+public.pem
