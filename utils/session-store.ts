@@ -68,7 +68,6 @@ export async function getSession(id: string): Promise<Session | undefined> {
 
   const ttl = Number(item.ttl.N);
   const userJson = JSON.parse(item.user?.S || "null") as APIUser | null;
-  console.log(userJson);
 
   if (!userJson) {
     return {
@@ -76,8 +75,6 @@ export async function getSession(id: string): Promise<Session | undefined> {
       ttl,
     };
   }
-
-  console.log(userJson);
 
   return {
     id,

@@ -38,8 +38,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await refresh();
   }, []);
 
-  console.log({ pendingGetMe, pendingInitialize });
-
   const value = useMemo(
     () => ({
       pending: pendingInitialize || pendingGetMe,
