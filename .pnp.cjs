@@ -44,6 +44,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jsonwebtoken", "npm:9.0.0"],\
             ["nanoid", "npm:4.0.0"],\
             ["next", "virtual:11aaed2618708cb2f516cb372261d1087babdcf8b99939721e83bb011b21da7ca8ea07ea3d06155f1d2775473fe4d120fcdbe8cd3880d16e22bf95461c85e71a#npm:13.1.3"],\
+            ["nookies", "npm:2.5.2"],\
             ["postcss", "npm:8.4.21"],\
             ["prettier", "npm:2.8.3"],\
             ["react", "npm:18.2.0"],\
@@ -3745,6 +3746,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["cookie", [\
+        ["npm:0.4.2", {\
+          "packageLocation": "./.yarn/cache/cookie-npm-0.4.2-7761894d5f-a00833c998.zip/node_modules/cookie/",\
+          "packageDependencies": [\
+            ["cookie", "npm:0.4.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["cross-spawn", [\
         ["npm:7.0.3", {\
           "packageLocation": "./.yarn/cache/cross-spawn-npm-7.0.3-e4ff3e65b3-671cc7c728.zip/node_modules/cross-spawn/",\
@@ -7003,6 +7013,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["nookies", [\
+        ["npm:2.5.2", {\
+          "packageLocation": "./.yarn/cache/nookies-npm-2.5.2-691fdd44ab-4cc6fd8d0a.zip/node_modules/nookies/",\
+          "packageDependencies": [\
+            ["nookies", "npm:2.5.2"],\
+            ["cookie", "npm:0.4.2"],\
+            ["set-cookie-parser", "npm:2.5.1"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["nopt", [\
         ["npm:6.0.0", {\
           "packageLocation": "./.yarn/cache/nopt-npm-6.0.0-5ea8050815-82149371f8.zip/node_modules/nopt/",\
@@ -7416,6 +7437,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["jsonwebtoken", "npm:9.0.0"],\
             ["nanoid", "npm:4.0.0"],\
             ["next", "virtual:11aaed2618708cb2f516cb372261d1087babdcf8b99939721e83bb011b21da7ca8ea07ea3d06155f1d2775473fe4d120fcdbe8cd3880d16e22bf95461c85e71a#npm:13.1.3"],\
+            ["nookies", "npm:2.5.2"],\
             ["postcss", "npm:8.4.21"],\
             ["prettier", "npm:2.8.3"],\
             ["react", "npm:18.2.0"],\
@@ -7969,6 +7991,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/set-blocking-npm-2.0.0-49e2cffa24-6e65a05f7c.zip/node_modules/set-blocking/",\
           "packageDependencies": [\
             ["set-blocking", "npm:2.0.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["set-cookie-parser", [\
+        ["npm:2.5.1", {\
+          "packageLocation": "./.yarn/cache/set-cookie-parser-npm-2.5.1-530f8bd9ef-b99c37f976.zip/node_modules/set-cookie-parser/",\
+          "packageDependencies": [\
+            ["set-cookie-parser", "npm:2.5.1"]\
           ],\
           "linkType": "HARD"\
         }]\
