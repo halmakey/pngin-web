@@ -3,5 +3,5 @@ export interface ApiUser {
   username: string;
   displayName?: string;
   discriminator: string;
-  avatarUrl: string | null;
+  avatarUrl: string;
 }

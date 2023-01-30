@@ -1,4 +1,5 @@
 import {
+  DeleteItemCommand,
   DynamoDBClient,
   GetItemCommand,
   PutItemCommand,
@@ -84,7 +85,9 @@ export async function getSession(id: string): Promise<Session | undefined> {
       username: userJson.username,
       displayName: (userJson as any).display_name,
       discriminator: userJson.discriminator,
-      avatarUrl: userJson.avatar && getAvatarUrl(userJson.id, userJson.avatar),
+      avatarUrl:
+        (userJson.avatar && getAvatarUrl(userJson.id, userJson.avatar)) ||
+        "/anonymous.svg",
     },
   };
 }
@@ -116,4 +119,17 @@ export async function attachDiscordToSession(
       ConditionExpression: "attribute_exists(id)",
     })
   );
+}
+
+export async function revokeSession(id: string) {
+  await client
+    .send(
+      new DeleteItemCommand({
+        TableName,
+        Key: {
+          id: { S: id },
+        },
+      })
+    )
+    .catch((err) => console.warn(err));
 }

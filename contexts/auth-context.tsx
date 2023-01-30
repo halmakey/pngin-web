@@ -3,14 +3,7 @@ import { useAsyncEffect } from "@/hooks/useAsyncEffect";
 import { ApiUser } from "@/types/api/user";
 import { apiGetMe } from "@/utils/api";
 import { fail } from "@/utils/functions";
-import {
-  createContext,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, ReactNode, useMemo, useState } from "react";
 
 interface AuthContext {
   pending: boolean;
@@ -29,7 +22,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const { pending: pendingGetMe, call: refresh } =
     useAsyncCallback(async () => {
-      const user = await apiGetMe();
+      const user = await apiGetMe().catch(() => undefined);
       setUser(user);
       return user;
     }, []);

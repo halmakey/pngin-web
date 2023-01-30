@@ -6,18 +6,19 @@ import {
 } from "@/utils/session-store";
 import { createToken } from "@/utils/token";
 import { GetServerSideProps } from "next";
-import nookies from "nookies";
+import Cookies from "cookies";
 
-export default function AuthPage() {
+export default function SignInPage() {
   return null;
 }
 
 export const getServerSideProps: GetServerSideProps = async ({
   query,
+  req,
   res,
 }) => {
-  const { signin, code, state } = query;
-  if (signin === "") {
+  const { code, state } = query;
+  if (!code || !state) {
     const { id } = await createSession();
     const url = getSignInUrl(id);
     return {
@@ -71,7 +72,9 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   const sessionToken = createToken(session.id, me.id, token.expires_in);
 
-  nookies.set({ res }, "token", sessionToken, {
+  const cookies = new Cookies(req, res);
+
+  cookies.set("token", sessionToken, {
     maxAge: token.expires_in,
   });
 
