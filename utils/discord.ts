@@ -1,7 +1,7 @@
 import type { APIUser } from "discord.js";
 
 const DISCORD_OAUTH_CLIENT_ID = process.env.DISCORD_OAUTH_CLIENT_ID!;
-const DISCORD_OAUTH_REDIRECT_URL = process.env.DISCORD_OAUTH_REDIRECT_URL!;
+const DISCORD_OAUTH_REDIRECT_URL = process.env.DISCORD_OAUTH_REDIRECT_URL || ("https://" + process.env.VERCEL_URL + "/signin");
 const DISCORD_OAUTH_CLIENT_SECRET = process.env.DISCORD_OAUTH_CLIENT_SECRET!;
 
 async function normalize<T = unknown>(response: Response): Promise<T> {
