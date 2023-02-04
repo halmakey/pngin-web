@@ -6,6 +6,10 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 checkAllEnvs()
 
+export const config = {
+  runtime: "edge",
+};
+
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
     return await getMe(req, res);
