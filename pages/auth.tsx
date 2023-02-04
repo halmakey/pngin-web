@@ -53,7 +53,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 
     await attachDiscordToSession(session.id, token, me);
 
-    const sessionToken = createToken(session.id, me.id, token.expires_in);
+    const sessionToken = await createToken(session.id, token.expires_in);
     const cookies = new Cookies(req, res);
 
     cookies.set("token", sessionToken, {
