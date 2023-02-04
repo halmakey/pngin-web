@@ -1,7 +1,10 @@
 import { ApiUser } from "@/types/api/user";
+import { checkAllEnvs } from "@/utils/check-env";
 import { getSession, Session } from "@/utils/session-store";
 import { verifyToken } from "@/utils/token";
 import { NextApiRequest, NextApiResponse } from "next";
+
+checkAllEnvs()
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
