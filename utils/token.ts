@@ -1,14 +1,11 @@
-import { SignJWT, importJWK, jwtVerify } from "jose";
-import { nanoid } from "nanoid";
+import { SignJWT, importJWK, jwtVerify, base64url } from "jose";
 
-const JWT_PRIVATE_KEY = Buffer.from(
-  process.env.PNGIN_JWT_PRIVATE_KEY!,
-  "base64url"
-).toString("utf-8");
-const JWT_PUBLIC_KEY = Buffer.from(
-  process.env.PNGIN_JWT_PUBLIC_KEY!,
-  "base64url"
-).toString("utf-8");
+const JWT_PRIVATE_KEY = new TextDecoder().decode(
+  base64url.decode(process.env.PNGIN_JWT_PRIVATE_KEY!)
+);
+const JWT_PUBLIC_KEY = new TextDecoder().decode(
+  base64url.decode(process.env.PNGIN_JWT_PUBLIC_KEY!)
+);
 
 const ES512 = "ES512";
 
@@ -37,7 +34,7 @@ export async function verifyToken(token: string) {
     algorithms: [ES512],
   });
   if ((payload.exp ?? 0) > Math.floor(Date.now() / 1000)) {
-    throw new Error("Expired")
+    throw new Error("Expired");
   }
   return payload as { session: string };
 }
