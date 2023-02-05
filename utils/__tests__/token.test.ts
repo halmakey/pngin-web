@@ -30,8 +30,10 @@ test("verify token: ng: invalid alg", async () => {
 });
 
 test("verify token: ng: expired", async () => {
-  advanceTo(1670000000)
+  advanceTo(1674974716841 + 1000 * 60 * 60);
   const token =
     "eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uIjoic2Vzc2lvbi1pZCIsImlhdCI6MTY3NDk3NDcxNiwiZXhwIjoxNjc0OTc0Nzc2fQ.AVGrqXNEbHYMdStGKPk-S6gOP9_wpPCMQMQirqv16X8e5zGZlMModIzv_FdxGqs8CY5SteFS28JWX6Hpa1rL2RUnACJEvqyY-OYbDT4nTqcN4m0YYkCYFJQ9pW7t0CIkC1KzUexN4_qDaPXlWpxKeSTWvfg8T4zoH9oSfSvT4h9muNQz";
-  await expect(verifyToken(token)).rejects.toThrowError("Expired");
+  await expect(verifyToken(token)).rejects.toThrowError(
+    '"exp" claim timestamp check failed'
+  );
 });

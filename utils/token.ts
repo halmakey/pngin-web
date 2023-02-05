@@ -33,8 +33,5 @@ export async function verifyToken(token: string) {
   const { payload } = await jwtVerify(token, key, {
     algorithms: [ES512],
   });
-  if ((payload.exp ?? 0) > Math.floor(Date.now() / 1000)) {
-    throw new Error("Expired");
-  }
   return payload as { session: string };
 }

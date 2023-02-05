@@ -4,7 +4,7 @@ import { getSession, Session } from "@/utils/session-store";
 import { verifyToken } from "@/utils/token";
 import { NextApiRequest, NextApiResponse } from "next";
 
-checkAllEnvs()
+checkAllEnvs();
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
@@ -18,7 +18,10 @@ async function getMe(req: NextApiRequest, res: NextApiResponse<ApiUser | {}>) {
 
   let session: Session | undefined;
   if (token) {
-    const payload = await verifyToken(token).catch(() => undefined);
+    const payload = await verifyToken(token).catch((err) => {
+      console.warn(err);
+      return undefined;
+    });
     session = payload && (await getSession(payload.session));
   }
   if (!session?.user) {
