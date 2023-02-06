@@ -9,9 +9,8 @@ export const config = {
 };
 
 async function callback(req: NextRequest, ev: NextFetchEvent) {
-  const url = new URL(req.url!);
-  const code = url.searchParams.get("code");
-  const state = url.searchParams.get("state");
+  const code = req.nextUrl.searchParams.get("code");
+  const state = req.nextUrl.searchParams.get("state");
   // check parameters
   if (
     !code ||
@@ -20,12 +19,12 @@ async function callback(req: NextRequest, ev: NextFetchEvent) {
     typeof state !== "string"
   ) {
     console.log("not found!!!!");
-    return Response.redirect("http://localhost:3000", 302);
+    return Response.redirect(req.nextUrl.origin, 302);
   }
 
   // grant access
   try {
-    const token = await authorizeCodeGrant(url.origin, code);
+    const token = await authorizeCodeGrant(req.nextUrl.origin, code);
 
     const me = await getMe(token.access_token);
 
@@ -44,7 +43,7 @@ async function callback(req: NextRequest, ev: NextFetchEvent) {
       token.expires_in
     );
 
-    const response = resRedirect("http://localhost:3000");
+    const response = resRedirect(req.nextUrl.origin);
     response.headers.set(
       "Set-Cookie",
       cookie.serialize("token", sessionToken, {
@@ -57,7 +56,7 @@ async function callback(req: NextRequest, ev: NextFetchEvent) {
     return response;
   } catch (err) {
     console.error(err);
-    return Response.redirect("http://localhost:3000", 302);
+    return Response.redirect(req.nextUrl.origin, 302);
   }
 }
 

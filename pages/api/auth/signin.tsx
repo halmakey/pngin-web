@@ -14,12 +14,11 @@ async function signin(req: NextRequest, ev: NextFetchEvent) {
   const payload = token && (await verifyToken(token).catch(() => undefined));
 
   if (payload) {
-    return Response.redirect("http://localhost:3000", 302);
+    return Response.redirect(req.nextUrl.origin, 302);
   }
 
   const state = nanoid();
-  const url = new URL(req.url!);
-  const signInUrl = getSignInUrl(url.origin, state);
+  const signInUrl = getSignInUrl(req.nextUrl.origin, state);
 
   const response = resRedirect(signInUrl, 302);
   response.headers.set(

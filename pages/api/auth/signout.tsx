@@ -7,7 +7,7 @@ export const config = {
 };
 
 async function signout(req: NextRequest, ev: NextFetchEvent) {
-  const response = resRedirect("http://localhost:3000");
+  const response = resRedirect(req.nextUrl.origin);
   response.headers.set(
     "Set-Cookie",
     cookie.serialize("token", "", {
