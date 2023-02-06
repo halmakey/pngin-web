@@ -1,34 +1,30 @@
-import { ApiUser } from "@/types/api/user";
 import { checkAllEnvs } from "@/utils/check-env";
-import { getSession, Session } from "@/utils/session-store";
+import { resJson } from "@/utils/res-utils";
 import { verifyToken } from "@/utils/token";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextFetchEvent, NextRequest } from "next/server";
+
+export const config = {
+  runtime: "edge",
+};
 
 checkAllEnvs();
 
-async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextRequest, ev: NextFetchEvent) {
   if (req.method === "GET") {
-    return await getMe(req, res);
+    return await getMe(req, ev);
   }
-  res.status(405).json({});
+  return resJson({}, 405);
 }
 
-async function getMe(req: NextApiRequest, res: NextApiResponse<ApiUser | {}>) {
-  const token = req.cookies.token;
+async function getMe(req: NextRequest, ev: NextFetchEvent) {
+  const token = req.cookies.get("token")?.value;
+  const payload = token && (await verifyToken(token));
 
-  let session: Session | undefined;
-  if (token) {
-    const payload = await verifyToken(token).catch((err) => {
-      console.warn(err);
-      return undefined;
-    });
-    session = payload && (await getSession(payload.session));
+  if (typeof payload !== "object" || typeof payload?.user !== "object") {
+    return resJson({}, 401);
   }
-  if (!session?.user) {
-    res.status(404).json({});
-    return;
-  }
-  res.json(session.user);
+
+  return resJson(payload.user);
 }
 
 export default handler;

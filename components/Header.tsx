@@ -41,7 +41,7 @@ export default function Header() {
               />
             </div>
           ) : (
-            <Link href="/signin" prefetch={false}>
+            <Link href="/api/auth/signin" prefetch={false}>
               <InvertBorderButton>Login</InvertBorderButton>
             </Link>
           )}
@@ -50,7 +50,7 @@ export default function Header() {
       <Popup show={popup !== "none"} onDismiss={hidePopup}>
         <div className="w-72 h-72 p-4">
           <div className="flex items-center">
-            <Link href="/signout" prefetch={false} onClick={hidePopup}>
+            <Link href="/api/auth/signout" prefetch={false} onClick={hidePopup}>
               <InvertBorderButton>ログアウト</InvertBorderButton>
             </Link>
           </div>
