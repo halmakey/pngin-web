@@ -55,7 +55,7 @@ async function callback(req: NextRequest, ev: NextFetchEvent) {
     return response;
   } catch (err) {
     console.error(err);
-    return Response.redirect(req.nextUrl.origin + "/?error=" + encodeURIComponent(String(err)), 302);
+    return Response.redirect(req.nextUrl.origin + "/?error=" + encodeURIComponent(String(err)) + "&redirect_uri=" + encodeURIComponent(req.nextUrl.origin + '/api/auth/callback'), 302);
   }
 }
 
