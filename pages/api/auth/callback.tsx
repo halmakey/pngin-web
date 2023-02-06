@@ -18,8 +18,13 @@ async function callback(req: NextRequest, ev: NextFetchEvent) {
     !state ||
     typeof state !== "string"
   ) {
-    return Response.redirect(req.nextUrl.origin + "/?code_state_not_found", 302);
+    return Response.redirect(
+      req.nextUrl.origin + "/?code_state_not_found",
+      302
+    );
   }
+
+  console.log({ code, state });
 
   // grant access
   try {
@@ -55,7 +60,14 @@ async function callback(req: NextRequest, ev: NextFetchEvent) {
     return response;
   } catch (err) {
     console.error(err);
-    return Response.redirect(req.nextUrl.origin + "/?error=" + encodeURIComponent(String(err)) + "&redirect_uri=" + encodeURIComponent(req.nextUrl.origin + '/api/auth/callback'), 302);
+    return Response.redirect(
+      req.nextUrl.origin +
+        "/?error=" +
+        encodeURIComponent(String(err)) +
+        "&redirect_uri=" +
+        encodeURIComponent(req.nextUrl.origin + "/api/auth/callback"),
+      302
+    );
   }
 }
 
