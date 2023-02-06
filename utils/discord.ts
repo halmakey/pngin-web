@@ -40,18 +40,17 @@ export async function authorizeCodeGrant(
     client_secret: DISCORD_OAUTH_CLIENT_SECRET,
     grant_type: DISCORD_OAUTH_CLIENT_SECRET,
     code,
-    redirect_uri: origin + "/api/auth/callback"
+    redirect_uri: origin + "/api/auth/callback",
   });
 
-  console.log(params.toString());
+  console.log({ params: params.toString() });
 
   const result = await fetch("https://discord.com/api/oauth2/token", {
     method: "POST",
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
+      "Content-Type": "application/x-www-form-urlencoded",
     },
     body: params.toString(),
-
   });
   return await normalize(result);
 }
