@@ -38,7 +38,7 @@ export async function authorizeCodeGrant(
   const params = new URLSearchParams({
     client_id: DISCORD_OAUTH_CLIENT_ID,
     client_secret: DISCORD_OAUTH_CLIENT_SECRET,
-    grant_type: DISCORD_OAUTH_CLIENT_SECRET,
+    grant_type: "authorization_code",
     code,
     redirect_uri: origin + "/api/auth/callback",
   });
