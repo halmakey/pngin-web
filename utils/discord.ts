@@ -43,7 +43,7 @@ export async function authorizeCodeGrant(
     redirect_uri: origin + "/api/auth/callback"
   });
 
-  console.log(params);
+  console.log(params.toString());
 
   const result = await fetch("https://discord.com/api/oauth2/token", {
     method: "POST",
