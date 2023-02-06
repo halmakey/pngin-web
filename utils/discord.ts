@@ -45,6 +45,9 @@ export async function authorizeCodeGrant(
 
   const result = await fetch("https://discord.com/api/oauth2/token", {
     method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
     body,
   });
   return await normalize(result);
