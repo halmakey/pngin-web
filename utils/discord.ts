@@ -17,11 +17,14 @@ async function normalize<T = unknown>(response: Response): Promise<T> {
 
 export function getSignInUrl(origin: string, state: string): string {
   return `https://discord.com/oauth2/authorize?response_type=code&client_id=${DISCORD_OAUTH_CLIENT_ID}&scope=identify%20guilds&state=${state}&redirect_uri=${encodeURIComponent(
-    origin + '/api/auth/callback'
+    origin + "/api/auth/callback"
   )}&prompt=consent`;
 }
 
-export async function authorizeCodeGrant(origin: string, code: string): Promise<{
+export async function authorizeCodeGrant(
+  origin: string,
+  code: string
+): Promise<{
   access_token: string;
   expires_in: number;
   refresh_token: string;
@@ -33,7 +36,9 @@ export async function authorizeCodeGrant(origin: string, code: string): Promise<
   params.append("client_secret", DISCORD_OAUTH_CLIENT_SECRET);
   params.append("grant_type", "authorization_code");
   params.append("code", code);
-  params.append("redirect_uri", origin + '/api/auth/callback');
+  params.append("redirect_uri", origin + "/api/auth/callback");
+
+  console.log(params);
 
   const result = await fetch("https://discord.com/api/oauth2/token", {
     method: "POST",
