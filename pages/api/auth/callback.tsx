@@ -18,8 +18,7 @@ async function callback(req: NextRequest, ev: NextFetchEvent) {
     !state ||
     typeof state !== "string"
   ) {
-    console.log("not found!!!!");
-    return Response.redirect(req.nextUrl.origin, 302);
+    return Response.redirect(req.nextUrl.origin + "/?code_state_not_found", 302);
   }
 
   // grant access
@@ -56,7 +55,7 @@ async function callback(req: NextRequest, ev: NextFetchEvent) {
     return response;
   } catch (err) {
     console.error(err);
-    return Response.redirect(req.nextUrl.origin, 302);
+    return Response.redirect(req.nextUrl.origin + "/?error=" + encodeURIComponent(String(err)), 302);
   }
 }
 
