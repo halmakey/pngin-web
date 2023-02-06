@@ -9,7 +9,11 @@ async function normalize<T = unknown>(response: Response): Promise<T> {
       const json = await response.json();
       throw new Error(json.error + ": " + json.error_description);
     } catch {
-      throw new Error(response.statusText);
+      throw new Error(
+        response.statusText +
+          ":" +
+          (await response.text().catch(() => "no body"))
+      );
     }
   }
   return await response.json();
