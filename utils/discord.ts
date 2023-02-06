@@ -35,12 +35,13 @@ export async function authorizeCodeGrant(
   scope: string;
   token_type: string;
 }> {
-  const params = new URLSearchParams();
-  params.append("client_id", DISCORD_OAUTH_CLIENT_ID);
-  params.append("client_secret", DISCORD_OAUTH_CLIENT_SECRET);
-  params.append("grant_type", "authorization_code");
-  params.append("code", code);
-  params.append("redirect_uri", origin + "/api/auth/callback");
+  const params = new URLSearchParams({
+    client_id: DISCORD_OAUTH_CLIENT_ID,
+    client_secret: DISCORD_OAUTH_CLIENT_SECRET,
+    grant_type: DISCORD_OAUTH_CLIENT_SECRET,
+    code,
+    redirect_uri: origin + "/api/auth/callback"
+  });
 
   console.log(params);
 
