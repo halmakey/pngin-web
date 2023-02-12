@@ -16,7 +16,7 @@ export default function Page() {
       return;
     }
     await refresh();
-    // router.replace("/");
+    router.replace("/");
   }, [router.query.refresh]);
 
   return (
