@@ -1,7 +1,7 @@
 import { checkAllEnvs } from "@/utils/check-env";
 import { resJson } from "@/utils/res-utils";
 import { verifyToken } from "@/utils/token";
-import { NextFetchEvent, NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 
 export const config = {
   runtime: "edge",
@@ -9,14 +9,14 @@ export const config = {
 
 checkAllEnvs();
 
-async function handler(req: NextRequest, ev: NextFetchEvent) {
+async function handler(req: NextRequest) {
   if (req.method === "GET") {
-    return await getMe(req, ev);
+    return await getMe(req);
   }
   return resJson({}, 405);
 }
 
-async function getMe(req: NextRequest, ev: NextFetchEvent) {
+async function getMe(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   const payload = token && (await verifyToken(token));
 

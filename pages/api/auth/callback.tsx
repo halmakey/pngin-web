@@ -1,6 +1,6 @@
 import { authorizeCodeGrant, getAvatarUrl, getMe } from "@/utils/discord";
 import { createToken } from "@/utils/token";
-import { NextFetchEvent, NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 import cookie from "cookie";
 import { resRedirect } from "@/utils/res-utils";
 
@@ -8,7 +8,7 @@ export const config = {
   runtime: "edge",
 };
 
-async function callback(req: NextRequest, ev: NextFetchEvent) {
+async function callback(req: NextRequest) {
   const code = req.nextUrl.searchParams.get("code");
   const state = req.nextUrl.searchParams.get("state");
   // check parameters

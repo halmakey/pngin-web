@@ -1,4 +1,4 @@
-import { NextFetchEvent, NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 import cookie from "cookie";
 import { resRedirect } from "@/utils/res-utils";
 
@@ -6,7 +6,7 @@ export const config = {
   runtime: "edge",
 };
 
-async function signout(req: NextRequest, ev: NextFetchEvent) {
+async function signout(req: NextRequest) {
   const response = resRedirect(req.nextUrl.origin);
   response.headers.set(
     "Set-Cookie",

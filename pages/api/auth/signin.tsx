@@ -1,6 +1,6 @@
 import { getSignInUrl } from "@/utils/discord";
 import { verifyToken } from "@/utils/token";
-import { NextFetchEvent, NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 import cookie from "cookie";
 import { nanoid } from "nanoid";
 import { resRedirect } from "@/utils/res-utils";
@@ -9,7 +9,7 @@ export const config = {
   runtime: "edge",
 };
 
-async function signin(req: NextRequest, ev: NextFetchEvent) {
+async function signin(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   const payload = token && (await verifyToken(token).catch(() => undefined));
 
