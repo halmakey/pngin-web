@@ -1,0 +1,40 @@
+enum ParticipantRole {
+  EXHIBITOR
+  STAFF
+  ADMINISTRATOR
+}
+
+type Content @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  updatedAt: AWSTimestamp!
+  contentTags: [ContentTag!] @manyToMany(relationName: "ContentContentTag")
+  file: AWSURL!
+  comment: String!
+  seq: Int!
+}
+
+enum ContentShape {
+  SQUARE
+  PORTRAIT
+  LANDSCAPE
+}
+
+type ContentTag @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  name: String!
+  comment: String
+  contents: [Content] @manyToMany(relationName: "ContentContentTag")
+}
+
+type Participants @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  createdAt: AWSDate!
+  updatedAt: AWSDate!
+  discordId: String!
+  discordName: String!
+  role: [ParticipantRole!]
+  file: AWSURL
+}
+ 
