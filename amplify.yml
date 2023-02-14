@@ -7,7 +7,8 @@ frontend:
     build:
       commands:
         - env | grep -e DISCORD_OAUTH_ >> .env.production
-        - env | grep -e NEXT_PUBLIC_ >> .env.production
+        - env | grep -e PNGIN_ >> .env.production
+        # - env | grep -e NEXT_PUBLIC_ >> .env.production
         - yarn build
   artifacts:
     baseDirectory: .next
