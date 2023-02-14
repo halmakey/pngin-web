@@ -1,30 +1,25 @@
 import { checkAllEnvs } from "@/utils/check-env";
-import { resJson } from "@/utils/res-utils";
 import { verifyToken } from "@/utils/token";
-import { NextRequest } from "next/server";
-
-export const config = {
-  runtime: "edge",
-};
+import { NextApiRequest, NextApiResponse } from "next";
 
 checkAllEnvs();
 
-async function handler(req: NextRequest) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
-    return await getMe(req);
+    return await getMe(req, res);
   }
-  return resJson({}, 405);
+  return res.status(405).json({});
 }
 
-async function getMe(req: NextRequest) {
-  const token = req.cookies.get("token")?.value;
+async function getMe(req: NextApiRequest, res: NextApiResponse) {
+  const { token } = req.cookies;
   const payload = token && (await verifyToken(token));
 
   if (typeof payload !== "object" || typeof payload?.user !== "object") {
-    return resJson({}, 401);
+    return res.status(401).json({});
   }
 
-  return resJson(payload.user);
+  return res.json(payload.user);
 }
 
 export default handler;
