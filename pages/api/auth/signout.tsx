@@ -1,14 +1,8 @@
-import { NextRequest } from "next/server";
 import cookie from "cookie";
-import { resRedirect } from "@/utils/res-utils";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export const config = {
-  runtime: "edge",
-};
-
-async function signout(req: NextRequest) {
-  const response = resRedirect(req.nextUrl.origin);
-  response.headers.set(
+async function signout(_: NextApiRequest, res: NextApiResponse) {
+  return res.setHeader(
     "Set-Cookie",
     cookie.serialize("token", "", {
       maxAge: 0,
@@ -16,9 +10,7 @@ async function signout(req: NextRequest) {
       secure: true,
       path: "/",
     })
-  );
-
-  return response;
+  ).redirect("/");
 }
 
 export default signout;

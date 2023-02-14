@@ -2,6 +2,7 @@ import type { APIUser } from "discord.js";
 
 const DISCORD_OAUTH_CLIENT_ID = process.env.DISCORD_OAUTH_CLIENT_ID!;
 const DISCORD_OAUTH_CLIENT_SECRET = process.env.DISCORD_OAUTH_CLIENT_SECRET!;
+const DISCORD_OAUTH_REDIRECT_URL = process.env.DISCORD_OAUTH_REDIRECT_URL!;
 
 async function normalize<T = unknown>(response: Response): Promise<T> {
   if (!response.ok) {
@@ -19,14 +20,13 @@ async function normalize<T = unknown>(response: Response): Promise<T> {
   return await response.json();
 }
 
-export function getSignInUrl(origin: string, state: string): string {
+export function getSignInUrl(state: string): string {
   return `https://discord.com/oauth2/authorize?response_type=code&client_id=${DISCORD_OAUTH_CLIENT_ID}&scope=identify%20guilds&state=${state}&redirect_uri=${encodeURIComponent(
-    origin + "/api/auth/callback"
+    DISCORD_OAUTH_REDIRECT_URL
   )}&prompt=consent`;
 }
 
 export async function authorizeCodeGrant(
-  origin: string,
   code: string
 ): Promise<{
   access_token: string;
@@ -40,7 +40,7 @@ export async function authorizeCodeGrant(
     client_secret: DISCORD_OAUTH_CLIENT_SECRET,
     grant_type: "authorization_code",
     code,
-    redirect_uri: origin + "/api/auth/callback",
+    redirect_uri: DISCORD_OAUTH_REDIRECT_URL,
   });
 
   const result = await fetch("https://discord.com/api/oauth2/token", {

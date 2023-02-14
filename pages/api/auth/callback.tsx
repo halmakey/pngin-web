@@ -1,16 +1,10 @@
 import { authorizeCodeGrant, getAvatarUrl, getMe } from "@/utils/discord";
 import { createToken } from "@/utils/token";
-import { NextRequest } from "next/server";
 import cookie from "cookie";
-import { resRedirect } from "@/utils/res-utils";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export const config = {
-  runtime: "edge",
-};
-
-async function callback(req: NextRequest) {
-  const code = req.nextUrl.searchParams.get("code");
-  const state = req.nextUrl.searchParams.get("state");
+async function callback(req: NextApiRequest, res: NextApiResponse) {
+  const { code, state } = req.query;
   // check parameters
   if (
     !code ||
@@ -18,12 +12,13 @@ async function callback(req: NextRequest) {
     !state ||
     typeof state !== "string"
   ) {
-    return Response.redirect(req.nextUrl.origin, 302);
+    return res.redirect("/");
   }
 
   // grant access
   try {
-    const token = await authorizeCodeGrant(req.nextUrl.origin, code);
+    req.headers.host;
+    const token = await authorizeCodeGrant(code);
 
     const me = await getMe(token.access_token);
 
@@ -42,20 +37,20 @@ async function callback(req: NextRequest) {
       token.expires_in
     );
 
-    const response = resRedirect(req.nextUrl.origin);
-    response.headers.set(
-      "Set-Cookie",
-      cookie.serialize("token", sessionToken, {
-        maxAge: token.expires_in,
-        httpOnly: true,
-        secure: true,
-        path: "/",
-      })
-    );
-    return response;
+    return res
+      .setHeader(
+        "Set-Cookie",
+        cookie.serialize("token", sessionToken, {
+          maxAge: token.expires_in,
+          httpOnly: true,
+          secure: true,
+          path: "/",
+        })
+      )
+      .redirect("/");
   } catch (err) {
     console.error(err);
-    return Response.redirect(req.nextUrl.origin, 302);
+    return res.redirect("/");
   }
 }
 
