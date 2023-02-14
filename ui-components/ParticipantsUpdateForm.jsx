@@ -260,6 +260,23 @@ export default function ParticipantsUpdateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
+  const convertToLocal = (date) => {
+    const df = new Intl.DateTimeFormat("default", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      calendar: "iso8601",
+      numberingSystem: "latn",
+      hour12: false,
+    });
+    const parts = df.formatToParts(date).reduce((acc, part) => {
+      acc[part.type] = part.value;
+      return acc;
+    }, {});
+    return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
+  };
   return (
     <Grid
       as="form"
@@ -325,10 +342,11 @@ export default function ParticipantsUpdateForm(props) {
         label="Created at"
         isRequired={true}
         isReadOnly={false}
-        type="date"
-        value={createdAt}
+        type="datetime-local"
+        value={createdAt && convertToLocal(new Date(createdAt))}
         onChange={(e) => {
-          let { value } = e.target;
+          let value =
+            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
           if (onChange) {
             const modelFields = {
               createdAt: value,
@@ -355,10 +373,11 @@ export default function ParticipantsUpdateForm(props) {
         label="Updated at"
         isRequired={true}
         isReadOnly={false}
-        type="date"
-        value={updatedAt}
+        type="datetime-local"
+        value={updatedAt && convertToLocal(new Date(updatedAt))}
         onChange={(e) => {
-          let { value } = e.target;
+          let value =
+            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
           if (onChange) {
             const modelFields = {
               createdAt,

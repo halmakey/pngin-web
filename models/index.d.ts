@@ -22,7 +22,7 @@ type EagerContent = {
     readOnlyFields: 'createdAt';
   };
   readonly id: string;
-  readonly updatedAt: number;
+  readonly updatedAt: string;
   readonly contentTags?: ContentContentTag[] | null;
   readonly file: string;
   readonly comment: string;
@@ -36,7 +36,7 @@ type LazyContent = {
     readOnlyFields: 'createdAt';
   };
   readonly id: string;
-  readonly updatedAt: number;
+  readonly updatedAt: string;
   readonly contentTags: AsyncCollection<ContentContentTag>;
   readonly file: string;
   readonly comment: string;
