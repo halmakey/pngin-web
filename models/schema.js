@@ -10,28 +10,19 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "updatedAt": {
                     "name": "updatedAt",
                     "isArray": false,
                     "type": "AWSDateTime",
                     "isRequired": true,
                     "attributes": []
-                },
-                "contentTags": {
-                    "name": "contentTags",
-                    "isArray": true,
-                    "type": {
-                        "model": "ContentContentTag"
-                    },
-                    "isRequired": true,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": [
-                            "content"
-                        ]
-                    }
                 },
                 "file": {
                     "name": "file",
@@ -54,13 +45,21 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
+                "tags": {
+                    "name": "tags",
+                    "isArray": true,
+                    "type": {
+                        "model": "ContentTag"
+                    },
                     "isRequired": false,
                     "attributes": [],
-                    "isReadOnly": true
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "content"
+                        ]
+                    }
                 }
             },
             "syncable": true,
@@ -88,8 +87,8 @@ export const schema = {
                 }
             ]
         },
-        "ContentTag": {
-            "name": "ContentTag",
+        "Tag": {
+            "name": "Tag",
             "fields": {
                 "id": {
                     "name": "id",
@@ -130,7 +129,7 @@ export const schema = {
                     "name": "contents",
                     "isArray": true,
                     "type": {
-                        "model": "ContentContentTag"
+                        "model": "ContentTag"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -138,13 +137,13 @@ export const schema = {
                     "association": {
                         "connectionType": "HAS_MANY",
                         "associatedWith": [
-                            "contentTag"
+                            "tag"
                         ]
                     }
                 }
             },
             "syncable": true,
-            "pluralName": "ContentTags",
+            "pluralName": "Tags",
             "attributes": [
                 {
                     "type": "model",
@@ -168,8 +167,8 @@ export const schema = {
                 }
             ]
         },
-        "Participants": {
-            "name": "Participants",
+        "User": {
+            "name": "User",
             "fields": {
                 "id": {
                     "name": "id",
@@ -214,7 +213,7 @@ export const schema = {
                     },
                     "isRequired": true,
                     "attributes": [],
-                    "isArrayNullable": true
+                    "isArrayNullable": false
                 },
                 "file": {
                     "name": "file",
@@ -225,7 +224,7 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "Participants",
+            "pluralName": "Users",
             "attributes": [
                 {
                     "type": "model",
@@ -249,8 +248,8 @@ export const schema = {
                 }
             ]
         },
-        "ContentContentTag": {
-            "name": "ContentContentTag",
+        "ContentTag": {
+            "name": "ContentTag",
             "fields": {
                 "id": {
                     "name": "id",
@@ -266,8 +265,8 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "contentTagId": {
-                    "name": "contentTagId",
+                "tagId": {
+                    "name": "tagId",
                     "isArray": false,
                     "type": "ID",
                     "isRequired": false,
@@ -288,18 +287,18 @@ export const schema = {
                         ]
                     }
                 },
-                "contentTag": {
-                    "name": "contentTag",
+                "tag": {
+                    "name": "tag",
                     "isArray": false,
                     "type": {
-                        "model": "ContentTag"
+                        "model": "Tag"
                     },
                     "isRequired": true,
                     "attributes": [],
                     "association": {
                         "connectionType": "BELONGS_TO",
                         "targetNames": [
-                            "contentTagId"
+                            "tagId"
                         ]
                     }
                 },
@@ -321,7 +320,7 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "ContentContentTags",
+            "pluralName": "ContentTags",
             "attributes": [
                 {
                     "type": "model",
@@ -339,9 +338,9 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byContentTag",
+                        "name": "byTag",
                         "fields": [
-                            "contentTagId"
+                            "tagId"
                         ]
                     }
                 }
@@ -368,5 +367,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.3.5",
-    "version": "94dd75ec7011a10baeb83e5aeed3d68b"
+    "version": "6d49807467323eacdc7c907be91f309b"
 };

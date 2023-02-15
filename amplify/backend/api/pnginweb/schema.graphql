@@ -6,11 +6,12 @@ enum ParticipantRole {
 
 type Content @model @auth(rules: [{allow: public}]) {
   id: ID!
+  createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
-  contentTags: [ContentTag!] @manyToMany(relationName: "ContentContentTag")
   file: AWSURL!
   comment: String!
   seq: Int!
+  tags: [Tag] @manyToMany(relationName: "ContentTag")
 }
 
 enum ContentShape {
@@ -19,22 +20,22 @@ enum ContentShape {
   LANDSCAPE
 }
 
-type ContentTag @model @auth(rules: [{allow: public}]) {
+type Tag @model @auth(rules: [{allow: public}]) {
   id: ID!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   name: String!
   comment: String
-  contents: [Content] @manyToMany(relationName: "ContentContentTag")
+  contents: [Content] @manyToMany(relationName: "ContentTag")
 }
 
-type Participants @model @auth(rules: [{allow: public}]) {
+type User @model @auth(rules: [{allow: public}]) {
   id: ID!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   discordId: String!
   discordName: String!
-  role: [ParticipantRole!]
+  role: [ParticipantRole!]!
   file: AWSURL
 }
  
