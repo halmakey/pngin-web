@@ -138,7 +138,7 @@ export const schema = {
                     "name": "comment",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "contents": {
@@ -399,5 +399,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.3.5",
-    "version": "69bcfecb58aff631987a32cfa737fea5"
+    "version": "0ce25c6e9a0ce4052a661cd78f9fe7e9"
 };

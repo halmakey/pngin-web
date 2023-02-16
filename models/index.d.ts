@@ -58,7 +58,7 @@ type EagerTag = {
   readonly createdAt: string;
   readonly updatedAt: string;
   readonly name: string;
-  readonly comment?: string | null;
+  readonly comment: string;
   readonly contents?: (ContentTag | null)[] | null;
 }
 
@@ -70,7 +70,7 @@ type LazyTag = {
   readonly createdAt: string;
   readonly updatedAt: string;
   readonly name: string;
-  readonly comment?: string | null;
+  readonly comment: string;
   readonly contents: AsyncCollection<ContentTag>;
 }
 
