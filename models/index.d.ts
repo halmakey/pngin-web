@@ -2,13 +2,13 @@ import { ModelInit, MutableModel, __modelMeta__, ManagedIdentifier } from "@aws-
 // @ts-ignore
 import { LazyLoading, LazyLoadingDisabled, AsyncCollection, AsyncItem } from "@aws-amplify/datastore";
 
-export enum ParticipantRole {
+export enum Role {
   EXHIBITOR = "EXHIBITOR",
   STAFF = "STAFF",
   ADMINISTRATOR = "ADMINISTRATOR"
 }
 
-export enum ContentShape {
+export enum Shape {
   SQUARE = "SQUARE",
   PORTRAIT = "PORTRAIT",
   LANDSCAPE = "LANDSCAPE"
@@ -27,6 +27,7 @@ type EagerContent = {
   readonly comment: string;
   readonly seq: number;
   readonly tags?: (ContentTag | null)[] | null;
+  readonly userID: string;
 }
 
 type LazyContent = {
@@ -40,6 +41,7 @@ type LazyContent = {
   readonly comment: string;
   readonly seq: number;
   readonly tags: AsyncCollection<ContentTag>;
+  readonly userID: string;
 }
 
 export declare type Content = LazyLoading extends LazyLoadingDisabled ? EagerContent : LazyContent
@@ -87,8 +89,9 @@ type EagerUser = {
   readonly updatedAt: string;
   readonly discordId: string;
   readonly discordName: string;
-  readonly role: ParticipantRole[] | keyof typeof ParticipantRole;
+  readonly roles: Role[] | keyof typeof Role;
   readonly file?: string | null;
+  readonly contents?: (Content | null)[] | null;
 }
 
 type LazyUser = {
@@ -100,8 +103,9 @@ type LazyUser = {
   readonly updatedAt: string;
   readonly discordId: string;
   readonly discordName: string;
-  readonly role: ParticipantRole[] | keyof typeof ParticipantRole;
+  readonly roles: Role[] | keyof typeof Role;
   readonly file?: string | null;
+  readonly contents: AsyncCollection<Content>;
 }
 
 export declare type User = LazyLoading extends LazyLoadingDisabled ? EagerUser : LazyUser

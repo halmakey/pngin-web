@@ -60,6 +60,13 @@ export const schema = {
                             "content"
                         ]
                     }
+                },
+                "userID": {
+                    "name": "userID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -68,6 +75,15 @@ export const schema = {
                 {
                     "type": "model",
                     "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byUser",
+                        "fields": [
+                            "userID"
+                        ]
+                    }
                 },
                 {
                     "type": "auth",
@@ -205,11 +221,11 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "role": {
-                    "name": "role",
+                "roles": {
+                    "name": "roles",
                     "isArray": true,
                     "type": {
-                        "enum": "ParticipantRole"
+                        "enum": "Role"
                     },
                     "isRequired": true,
                     "attributes": [],
@@ -221,6 +237,22 @@ export const schema = {
                     "type": "AWSURL",
                     "isRequired": false,
                     "attributes": []
+                },
+                "contents": {
+                    "name": "contents",
+                    "isArray": true,
+                    "type": {
+                        "model": "Content"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "userID"
+                        ]
+                    }
                 }
             },
             "syncable": true,
@@ -348,16 +380,16 @@ export const schema = {
         }
     },
     "enums": {
-        "ParticipantRole": {
-            "name": "ParticipantRole",
+        "Role": {
+            "name": "Role",
             "values": [
                 "EXHIBITOR",
                 "STAFF",
                 "ADMINISTRATOR"
             ]
         },
-        "ContentShape": {
-            "name": "ContentShape",
+        "Shape": {
+            "name": "Shape",
             "values": [
                 "SQUARE",
                 "PORTRAIT",
@@ -367,5 +399,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.3.5",
-    "version": "6d49807467323eacdc7c907be91f309b"
+    "version": "69bcfecb58aff631987a32cfa737fea5"
 };

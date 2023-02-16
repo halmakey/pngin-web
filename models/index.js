@@ -2,13 +2,13 @@
 import { initSchema } from '@aws-amplify/datastore';
 import { schema } from './schema';
 
-const ParticipantRole = {
+const Role = {
   "EXHIBITOR": "EXHIBITOR",
   "STAFF": "STAFF",
   "ADMINISTRATOR": "ADMINISTRATOR"
 };
 
-const ContentShape = {
+const Shape = {
   "SQUARE": "SQUARE",
   "PORTRAIT": "PORTRAIT",
   "LANDSCAPE": "LANDSCAPE"
@@ -21,6 +21,6 @@ export {
   Tag,
   User,
   ContentTag,
-  ParticipantRole,
-  ContentShape
+  Role,
+  Shape
 };

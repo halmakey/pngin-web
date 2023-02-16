@@ -1,4 +1,4 @@
-enum ParticipantRole {
+enum Role {
   EXHIBITOR
   STAFF
   ADMINISTRATOR
@@ -12,9 +12,10 @@ type Content @model @auth(rules: [{allow: public}]) {
   comment: String!
   seq: Int!
   tags: [Tag] @manyToMany(relationName: "ContentTag")
+  userID: ID! @index(name: "byUser")
 }
 
-enum ContentShape {
+enum Shape {
   SQUARE
   PORTRAIT
   LANDSCAPE
@@ -35,7 +36,8 @@ type User @model @auth(rules: [{allow: public}]) {
   updatedAt: AWSDateTime!
   discordId: String!
   discordName: String!
-  role: [ParticipantRole!]!
+  roles: [Role!]!
   file: AWSURL
+  contents: [Content] @hasMany(indexName: "byUser", fields: ["id"])
 }
  
