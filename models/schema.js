@@ -1,5 +1,94 @@
 export const schema = {
     "models": {
+        "Session": {
+            "name": "Session",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "userID": {
+                    "name": "userID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "nonce": {
+                    "name": "nonce",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "discordToken": {
+                    "name": "discordToken",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "expireAt": {
+                    "name": "expireAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "Sessions",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byUser",
+                        "fields": [
+                            "userID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
         "Content": {
             "name": "Content",
             "fields": {
@@ -45,11 +134,11 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "tags": {
-                    "name": "tags",
+                "Tags": {
+                    "name": "Tags",
                     "isArray": true,
                     "type": {
-                        "model": "ContentTag"
+                        "model": "TagContent"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -141,11 +230,11 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "contents": {
-                    "name": "contents",
+                "Contents": {
+                    "name": "Contents",
                     "isArray": true,
                     "type": {
-                        "model": "ContentTag"
+                        "model": "TagContent"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -238,11 +327,27 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "contents": {
-                    "name": "contents",
+                "Contents": {
+                    "name": "Contents",
                     "isArray": true,
                     "type": {
                         "model": "Content"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "userID"
+                        ]
+                    }
+                },
+                "Sessions": {
+                    "name": "Sessions",
+                    "isArray": true,
+                    "type": {
+                        "model": "Session"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -280,8 +385,8 @@ export const schema = {
                 }
             ]
         },
-        "ContentTag": {
-            "name": "ContentTag",
+        "TagContent": {
+            "name": "TagContent",
             "fields": {
                 "id": {
                     "name": "id",
@@ -352,7 +457,7 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "ContentTags",
+            "pluralName": "TagContents",
             "attributes": [
                 {
                     "type": "model",
@@ -399,5 +504,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.3.5",
-    "version": "0ce25c6e9a0ce4052a661cd78f9fe7e9"
+    "version": "2ffcebedf614b58a7163b438713438e6"
 };

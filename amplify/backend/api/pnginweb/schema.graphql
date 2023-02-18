@@ -1,3 +1,11 @@
+type Session @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  userID: ID @index(name: "byUser")
+  nonce: String!
+  discordToken: String
+  expireAt: AWSDateTime
+}
+
 enum Role {
   EXHIBITOR
   STAFF
@@ -11,7 +19,7 @@ type Content @model @auth(rules: [{allow: public}]) {
   file: AWSURL!
   comment: String!
   seq: Int!
-  tags: [Tag] @manyToMany(relationName: "ContentTag")
+  Tags: [Tag] @manyToMany(relationName: "TagContent")
   userID: ID! @index(name: "byUser")
 }
 
@@ -27,7 +35,7 @@ type Tag @model @auth(rules: [{allow: public}]) {
   updatedAt: AWSDateTime!
   name: String!
   comment: String!
-  contents: [Content] @manyToMany(relationName: "ContentTag")
+  Contents: [Content] @manyToMany(relationName: "TagContent")
 }
 
 type User @model @auth(rules: [{allow: public}]) {
@@ -38,6 +46,7 @@ type User @model @auth(rules: [{allow: public}]) {
   discordName: String!
   roles: [Role!]!
   file: AWSURL
-  contents: [Content] @hasMany(indexName: "byUser", fields: ["id"])
+  Contents: [Content] @hasMany(indexName: "byUser", fields: ["id"])
+  Sessions: [Session] @hasMany(indexName: "byUser", fields: ["id"])
 }
  

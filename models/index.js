@@ -14,13 +14,14 @@ const Shape = {
   "LANDSCAPE": "LANDSCAPE"
 };
 
-const { Content, Tag, User, ContentTag } = initSchema(schema);
+const { Session, Content, Tag, User, TagContent } = initSchema(schema);
 
 export {
+  Session,
   Content,
   Tag,
   User,
-  ContentTag,
+  TagContent,
   Role,
   Shape
 };
