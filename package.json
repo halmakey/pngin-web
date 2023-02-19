@@ -10,12 +10,11 @@
     "test": "jest"
   },
   "dependencies": {
-    "@aws-amplify/datastore": "^4.0.14",
     "@next/font": "^13.1.6",
     "@types/node": "^18.13.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.10",
-    "aws-amplify": "5.0.2",
+    "aws-amplify": "^5.0.15",
     "cookie": "^0.5.0",
     "discord.js": "^14.7.1",
     "jose": "^4.11.4",

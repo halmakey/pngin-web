@@ -10,25 +10,18 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "userID": {
-                    "name": "userID",
+                "createdAt": {
+                    "name": "createdAt",
                     "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "nonce": {
-                    "name": "nonce",
-                    "isArray": false,
-                    "type": "String",
+                    "type": "AWSDateTime",
                     "isRequired": true,
                     "attributes": []
                 },
-                "discordToken": {
-                    "name": "discordToken",
+                "updatedAt": {
+                    "name": "updatedAt",
                     "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
+                    "type": "AWSDateTime",
+                    "isRequired": true,
                     "attributes": []
                 },
                 "expireAt": {
@@ -38,21 +31,19 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "createdAt": {
-                    "name": "createdAt",
+                "userID": {
+                    "name": "userID",
                     "isArray": false,
-                    "type": "AWSDateTime",
+                    "type": "ID",
                     "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
+                    "attributes": []
                 },
-                "updatedAt": {
-                    "name": "updatedAt",
+                "discordToken": {
+                    "name": "discordToken",
                     "isArray": false,
-                    "type": "AWSDateTime",
+                    "type": "String",
                     "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -154,7 +145,7 @@ export const schema = {
                     "name": "userID",
                     "isArray": false,
                     "type": "ID",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 }
             },
@@ -504,5 +495,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.3.5",
-    "version": "5bab70e0a6b94ae66044c3dec556c234"
+    "version": "0541b6a064f1d85c1b57f4be99618cba"
 };

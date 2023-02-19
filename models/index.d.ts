@@ -19,29 +19,25 @@ export enum Shape {
 type EagerSession = {
   readonly [__modelMeta__]: {
     identifier: ManagedIdentifier<Session, 'id'>;
-    readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly userID?: string | null;
-  readonly nonce: string;
-  readonly discordToken?: string | null;
+  readonly createdAt: string;
+  readonly updatedAt: string;
   readonly expireAt: string;
-  readonly createdAt?: string | null;
-  readonly updatedAt?: string | null;
+  readonly userID?: string | null;
+  readonly discordToken?: string | null;
 }
 
 type LazySession = {
   readonly [__modelMeta__]: {
     identifier: ManagedIdentifier<Session, 'id'>;
-    readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly userID?: string | null;
-  readonly nonce: string;
-  readonly discordToken?: string | null;
+  readonly createdAt: string;
+  readonly updatedAt: string;
   readonly expireAt: string;
-  readonly createdAt?: string | null;
-  readonly updatedAt?: string | null;
+  readonly userID?: string | null;
+  readonly discordToken?: string | null;
 }
 
 export declare type Session = LazyLoading extends LazyLoadingDisabled ? EagerSession : LazySession
@@ -61,7 +57,7 @@ type EagerContent = {
   readonly comment: string;
   readonly seq: number;
   readonly Tags?: (TagContent | null)[] | null;
-  readonly userID: string;
+  readonly userID?: string | null;
 }
 
 type LazyContent = {
@@ -75,7 +71,7 @@ type LazyContent = {
   readonly comment: string;
   readonly seq: number;
   readonly Tags: AsyncCollection<TagContent>;
-  readonly userID: string;
+  readonly userID?: string | null;
 }
 
 export declare type Content = LazyLoading extends LazyLoadingDisabled ? EagerContent : LazyContent

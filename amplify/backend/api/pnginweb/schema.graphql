@@ -1,9 +1,10 @@
 type Session @model @auth(rules: [{allow: public}]) {
   id: ID!
-  userID: ID @index(name: "byUser")
-  nonce: String!
-  discordToken: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
   expireAt: AWSDateTime!
+  userID: ID @index(name: "byUser")
+  discordToken: String
 }
 
 enum Role {
@@ -20,7 +21,7 @@ type Content @model @auth(rules: [{allow: public}]) {
   comment: String!
   seq: Int!
   Tags: [Tag] @manyToMany(relationName: "TagContent")
-  userID: ID! @index(name: "byUser")
+  userID: ID @index(name: "byUser")
 }
 
 enum Shape {
