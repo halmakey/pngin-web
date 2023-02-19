@@ -25,7 +25,7 @@ type EagerSession = {
   readonly userID?: string | null;
   readonly nonce: string;
   readonly discordToken?: string | null;
-  readonly expireAt?: string | null;
+  readonly expireAt: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -39,7 +39,7 @@ type LazySession = {
   readonly userID?: string | null;
   readonly nonce: string;
   readonly discordToken?: string | null;
-  readonly expireAt?: string | null;
+  readonly expireAt: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }

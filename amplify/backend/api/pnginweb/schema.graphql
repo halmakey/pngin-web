@@ -3,7 +3,7 @@ type Session @model @auth(rules: [{allow: public}]) {
   userID: ID @index(name: "byUser")
   nonce: String!
   discordToken: String
-  expireAt: AWSDateTime
+  expireAt: AWSDateTime!
 }
 
 enum Role {

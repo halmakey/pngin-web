@@ -35,7 +35,7 @@ export const schema = {
                     "name": "expireAt",
                     "isArray": false,
                     "type": "AWSDateTime",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "createdAt": {
@@ -504,5 +504,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.3.5",
-    "version": "2ffcebedf614b58a7163b438713438e6"
+    "version": "5bab70e0a6b94ae66044c3dec556c234"
 };
