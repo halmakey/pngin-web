@@ -14,12 +14,14 @@ const Shape = {
   "LANDSCAPE": "LANDSCAPE"
 };
 
-const { Session, Content, Tag, User, TagContent } = initSchema(schema);
+const { Submission, Content, Tag, Collection, Session, User, TagContent } = initSchema(schema);
 
 export {
-  Session,
+  Submission,
   Content,
   Tag,
+  Collection,
+  Session,
   User,
   TagContent,
   Role,
