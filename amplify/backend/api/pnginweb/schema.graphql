@@ -1,3 +1,24 @@
+type Submission @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  file: AWSURL
+  Contents: [Content] @hasMany(indexName: "bySubmission", fields: ["id"])
+  confirmed: Boolean
+  comment: String
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  collectionID: ID! @index(name: "byCollection")
+  userID: ID! @index(name: "byUser")
+}
+
+type Collection @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  startCallAt: AWSDateTime
+  endCallAt: AWSDateTime
+  sequence: Int
+  Submissions: [Submission] @hasMany(indexName: "byCollection", fields: ["id"])
+}
+
 type Session @model @auth(rules: [{allow: public}]) {
   id: ID!
   createdAt: AWSDateTime!
@@ -22,6 +43,7 @@ type Content @model @auth(rules: [{allow: public}]) {
   seq: Int!
   Tags: [Tag] @manyToMany(relationName: "TagContent")
   userID: ID @index(name: "byUser")
+  submissionID: ID! @index(name: "bySubmission")
 }
 
 enum Shape {
@@ -46,8 +68,8 @@ type User @model @auth(rules: [{allow: public}]) {
   discordId: String!
   discordName: String!
   roles: [Role!]!
-  file: AWSURL
   Contents: [Content] @hasMany(indexName: "byUser", fields: ["id"])
   Sessions: [Session] @hasMany(indexName: "byUser", fields: ["id"])
+  Submissions: [Submission] @hasMany(indexName: "byUser", fields: ["id"])
 }
  
