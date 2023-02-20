@@ -1,13 +1,10 @@
 type Submission @model @auth(rules: [{allow: public}]) {
   id: ID!
   file: AWSURL
-  Contents: [Content] @hasMany(indexName: "bySubmission", fields: ["id"])
   confirmed: Boolean
   comment: String
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
-  collectionID: ID! @index(name: "byCollection")
-  userID: ID! @index(name: "byUser")
 }
 
 type Collection @model @auth(rules: [{allow: public}]) {
@@ -16,8 +13,6 @@ type Collection @model @auth(rules: [{allow: public}]) {
   startCallAt: AWSDateTime
   endCallAt: AWSDateTime
   sequence: Int
-  Submissions: [Submission] @hasMany(indexName: "byCollection", fields: ["id"])
-  Contents: [Content] @hasMany(indexName: "byCollection", fields: ["id"])
 }
 
 type Session @model @auth(rules: [{allow: public}]) {
@@ -25,7 +20,6 @@ type Session @model @auth(rules: [{allow: public}]) {
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
   expireAt: AWSDateTime!
-  userID: ID @index(name: "byUser")
   discordToken: String
 }
 
@@ -42,9 +36,6 @@ type Content @model @auth(rules: [{allow: public}]) {
   file: AWSURL!
   comment: String!
   seq: Int!
-  Tags: [Tag] @manyToMany(relationName: "TagContent")
-  collectionID: ID! @index(name: "byCollection")
-  submissionID: ID! @index(name: "bySubmission")
 }
 
 enum Shape {
@@ -59,7 +50,6 @@ type Tag @model @auth(rules: [{allow: public}]) {
   updatedAt: AWSDateTime!
   name: String!
   comment: String!
-  Contents: [Content] @manyToMany(relationName: "TagContent")
 }
 
 type User @model @auth(rules: [{allow: public}]) {
@@ -69,5 +59,4 @@ type User @model @auth(rules: [{allow: public}]) {
   discordId: String!
   discordName: String!
   roles: [Role!]!
-  Submissions: [Submission] @hasMany(indexName: "byUser", fields: ["id"])
 }
