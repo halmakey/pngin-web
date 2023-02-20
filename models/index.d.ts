@@ -63,8 +63,9 @@ type EagerContent = {
   readonly comment: string;
   readonly seq: number;
   readonly Tags?: (TagContent | null)[] | null;
-  readonly userID?: string | null;
+  readonly collectionID: string;
   readonly submissionID: string;
+  readonly userID?: string | null;
 }
 
 type LazyContent = {
@@ -78,8 +79,9 @@ type LazyContent = {
   readonly comment: string;
   readonly seq: number;
   readonly Tags: AsyncCollection<TagContent>;
-  readonly userID?: string | null;
+  readonly collectionID: string;
   readonly submissionID: string;
+  readonly userID?: string | null;
 }
 
 export declare type Content = LazyLoading extends LazyLoadingDisabled ? EagerContent : LazyContent
@@ -129,6 +131,7 @@ type EagerCollection = {
   readonly endCallAt?: string | null;
   readonly sequence?: number | null;
   readonly Submissions?: (Submission | null)[] | null;
+  readonly Contents?: (Content | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -144,6 +147,7 @@ type LazyCollection = {
   readonly endCallAt?: string | null;
   readonly sequence?: number | null;
   readonly Submissions: AsyncCollection<Submission>;
+  readonly Contents: AsyncCollection<Content>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -194,8 +198,6 @@ type EagerUser = {
   readonly discordId: string;
   readonly discordName: string;
   readonly roles: Role[] | keyof typeof Role;
-  readonly Contents?: (Content | null)[] | null;
-  readonly Sessions?: (Session | null)[] | null;
   readonly Submissions?: (Submission | null)[] | null;
 }
 
@@ -209,8 +211,6 @@ type LazyUser = {
   readonly discordId: string;
   readonly discordName: string;
   readonly roles: Role[] | keyof typeof Role;
-  readonly Contents: AsyncCollection<Content>;
-  readonly Sessions: AsyncCollection<Session>;
   readonly Submissions: AsyncCollection<Submission>;
 }
 

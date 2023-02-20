@@ -180,11 +180,11 @@ export const schema = {
                         ]
                     }
                 },
-                "userID": {
-                    "name": "userID",
+                "collectionID": {
+                    "name": "collectionID",
                     "isArray": false,
                     "type": "ID",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "submissionID": {
@@ -192,6 +192,13 @@ export const schema = {
                     "isArray": false,
                     "type": "ID",
                     "isRequired": true,
+                    "attributes": []
+                },
+                "userID": {
+                    "name": "userID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
                     "attributes": []
                 }
             },
@@ -205,9 +212,9 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byUser",
+                        "name": "byCollection",
                         "fields": [
-                            "userID"
+                            "collectionID"
                         ]
                     }
                 },
@@ -217,6 +224,15 @@ export const schema = {
                         "name": "bySubmission",
                         "fields": [
                             "submissionID"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byUser",
+                        "fields": [
+                            "userID"
                         ]
                     }
                 },
@@ -361,6 +377,22 @@ export const schema = {
                     "isArray": true,
                     "type": {
                         "model": "Submission"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "collectionID"
+                        ]
+                    }
+                },
+                "Contents": {
+                    "name": "Contents",
+                    "isArray": true,
+                    "type": {
+                        "model": "Content"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -542,38 +574,6 @@ export const schema = {
                     "attributes": [],
                     "isArrayNullable": false
                 },
-                "Contents": {
-                    "name": "Contents",
-                    "isArray": true,
-                    "type": {
-                        "model": "Content"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": [
-                            "userID"
-                        ]
-                    }
-                },
-                "Sessions": {
-                    "name": "Sessions",
-                    "isArray": true,
-                    "type": {
-                        "model": "Session"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": [
-                            "userID"
-                        ]
-                    }
-                },
                 "Submissions": {
                     "name": "Submissions",
                     "isArray": true,
@@ -735,5 +735,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.3.5",
-    "version": "da4999f5a3402194f247ecaf1718be84"
+    "version": "ee74aca2ae0586afcca18325ae3683dc"
 };
