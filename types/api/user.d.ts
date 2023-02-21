@@ -1,7 +1,5 @@
 export interface ApiUser {
   id: string;
-  username: string;
-  displayName?: string;
-  discriminator: string;
+  name: string;
   avatarUrl: string;
 }

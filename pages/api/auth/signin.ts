@@ -1,18 +1,29 @@
+import '@/utils/configure-amplify'
+import { Session } from "@/models";
 import { getSignInUrl } from "@/utils/discord";
-import { verifyToken } from "@/utils/token";
+import { generateRandomHex } from "@/utils/random";
+import { createSessionToken, verifySessionToken } from "@/utils/token";
+import { DataStore } from "aws-amplify";
 import cookie from "cookie";
-import { nanoid } from "nanoid";
 import { NextApiRequest, NextApiResponse } from "next";
 
+// 1h
+const Age1H = 60 * 60;
+
 async function signin(req: NextApiRequest, res: NextApiResponse) {
-  const { token } = req.cookies;
-  const payload = token && (await verifyToken(token).catch(() => undefined));
+  const nonce = generateRandomHex(32);
 
-  if (payload) {
-    return res.redirect("/");
-  }
+  const now = Date.now();
+  const session = await DataStore.save(
+    new Session({
+      expireAt: new Date(now + Age1H * 1000).toISOString(),
+      createdAt: new Date(now).toISOString(),
+      updatedAt: new Date(now).toISOString(),
+      nonce,
+    })
+  );
 
-  const state = nanoid();
+  const state = await createSessionToken(session, Age1H);
   const signInUrl = getSignInUrl(state);
 
   return res

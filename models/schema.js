@@ -17,22 +17,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "Contents": {
-                    "name": "Contents",
-                    "isArray": true,
-                    "type": {
-                        "model": "Content"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": [
-                            "submissionID"
-                        ]
-                    }
-                },
                 "confirmed": {
                     "name": "confirmed",
                     "isArray": false,
@@ -61,15 +45,31 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "collectionID": {
-                    "name": "collectionID",
+                "Contents": {
+                    "name": "Contents",
+                    "isArray": true,
+                    "type": {
+                        "model": "Content"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "submissionID"
+                        ]
+                    }
+                },
+                "userID": {
+                    "name": "userID",
                     "isArray": false,
                     "type": "ID",
                     "isRequired": true,
                     "attributes": []
                 },
-                "userID": {
-                    "name": "userID",
+                "collectionID": {
+                    "name": "collectionID",
                     "isArray": false,
                     "type": "ID",
                     "isRequired": true,
@@ -86,18 +86,18 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byCollection",
+                        "name": "byUser",
                         "fields": [
-                            "collectionID"
+                            "userID"
                         ]
                     }
                 },
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byUser",
+                        "name": "byCollection",
                         "fields": [
-                            "userID"
+                            "collectionID"
                         ]
                     }
                 },
@@ -164,11 +164,34 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "submissionID": {
+                    "name": "submissionID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "collectionID": {
+                    "name": "collectionID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "shape": {
+                    "name": "shape",
+                    "isArray": false,
+                    "type": {
+                        "enum": "Shape"
+                    },
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "Tags": {
                     "name": "Tags",
                     "isArray": true,
                     "type": {
-                        "model": "TagContent"
+                        "model": "ContentTag"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -179,27 +202,6 @@ export const schema = {
                             "content"
                         ]
                     }
-                },
-                "collectionID": {
-                    "name": "collectionID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "submissionID": {
-                    "name": "submissionID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "userID": {
-                    "name": "userID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
                 }
             },
             "syncable": true,
@@ -208,15 +210,6 @@ export const schema = {
                 {
                     "type": "model",
                     "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byCollection",
-                        "fields": [
-                            "collectionID"
-                        ]
-                    }
                 },
                 {
                     "type": "key",
@@ -230,9 +223,9 @@ export const schema = {
                 {
                     "type": "key",
                     "properties": {
-                        "name": "byUser",
+                        "name": "byCollection",
                         "fields": [
-                            "userID"
+                            "collectionID"
                         ]
                     }
                 },
@@ -292,11 +285,11 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "Contents": {
-                    "name": "Contents",
+                "contents": {
+                    "name": "contents",
                     "isArray": true,
                     "type": {
-                        "model": "TagContent"
+                        "model": "ContentTag"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -372,11 +365,11 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "Submissions": {
-                    "name": "Submissions",
+                "Contents": {
+                    "name": "Contents",
                     "isArray": true,
                     "type": {
-                        "model": "Submission"
+                        "model": "Content"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -388,11 +381,11 @@ export const schema = {
                         ]
                     }
                 },
-                "Contents": {
-                    "name": "Contents",
+                "Submissions": {
+                    "name": "Submissions",
                     "isArray": true,
                     "type": {
-                        "model": "Content"
+                        "model": "Submission"
                     },
                     "isRequired": false,
                     "attributes": [],
@@ -477,17 +470,17 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "nonce": {
+                    "name": "nonce",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "userID": {
                     "name": "userID",
                     "isArray": false,
                     "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "discordToken": {
-                    "name": "discordToken",
-                    "isArray": false,
-                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 }
@@ -550,29 +543,12 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "discordId": {
-                    "name": "discordId",
+                "name": {
+                    "name": "name",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
                     "attributes": []
-                },
-                "discordName": {
-                    "name": "discordName",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "roles": {
-                    "name": "roles",
-                    "isArray": true,
-                    "type": {
-                        "enum": "Role"
-                    },
-                    "isRequired": true,
-                    "attributes": [],
-                    "isArrayNullable": false
                 },
                 "Submissions": {
                     "name": "Submissions",
@@ -589,6 +565,36 @@ export const schema = {
                             "userID"
                         ]
                     }
+                },
+                "Sessions": {
+                    "name": "Sessions",
+                    "isArray": true,
+                    "type": {
+                        "model": "Session"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": [
+                            "userID"
+                        ]
+                    }
+                },
+                "discordId": {
+                    "name": "discordId",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "avatarUrl": {
+                    "name": "avatarUrl",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
                 }
             },
             "syncable": true,
@@ -616,8 +622,8 @@ export const schema = {
                 }
             ]
         },
-        "TagContent": {
-            "name": "TagContent",
+        "ContentTag": {
+            "name": "ContentTag",
             "fields": {
                 "id": {
                     "name": "id",
@@ -688,7 +694,7 @@ export const schema = {
                 }
             },
             "syncable": true,
-            "pluralName": "TagContents",
+            "pluralName": "ContentTags",
             "attributes": [
                 {
                     "type": "model",
@@ -716,14 +722,6 @@ export const schema = {
         }
     },
     "enums": {
-        "Role": {
-            "name": "Role",
-            "values": [
-                "EXHIBITOR",
-                "STAFF",
-                "ADMINISTRATOR"
-            ]
-        },
         "Shape": {
             "name": "Shape",
             "values": [
@@ -731,9 +729,17 @@ export const schema = {
                 "PORTRAIT",
                 "LANDSCAPE"
             ]
+        },
+        "Role": {
+            "name": "Role",
+            "values": [
+                "EXHIBITOR",
+                "STAFF",
+                "ADMINISTRATOR"
+            ]
         }
     },
     "nonModels": {},
     "codegenVersion": "3.3.5",
-    "version": "ee74aca2ae0586afcca18325ae3683dc"
+    "version": "ceb81a543cfc5990283b76660ec0a00c"
 };

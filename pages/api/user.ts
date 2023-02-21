@@ -1,5 +1,6 @@
+import { ApiUser } from "@/types/api/user";
 import { checkAllEnvs } from "@/utils/check-env";
-import { verifyToken } from "@/utils/token";
+import { verifyUserToken } from "@/utils/token";
 import { NextApiRequest, NextApiResponse } from "next";
 
 checkAllEnvs();
@@ -11,11 +12,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   return res.status(405).json({});
 }
 
-async function getMe(req: NextApiRequest, res: NextApiResponse) {
+async function getMe(
+  req: NextApiRequest,
+  res: NextApiResponse<ApiUser | { [key: string]: never }>
+) {
   const { token } = req.cookies;
-  const payload = token && (await verifyToken(token));
+  const payload = token && (await verifyUserToken(token));
 
-  if (typeof payload !== "object" || typeof payload?.user !== "object") {
+  if (!payload) {
     return res.status(401).json({});
   }
 

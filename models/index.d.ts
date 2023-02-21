@@ -2,16 +2,16 @@ import { ModelInit, MutableModel, __modelMeta__, ManagedIdentifier } from "@aws-
 // @ts-ignore
 import { LazyLoading, LazyLoadingDisabled, AsyncCollection, AsyncItem } from "@aws-amplify/datastore";
 
-export enum Role {
-  EXHIBITOR = "EXHIBITOR",
-  STAFF = "STAFF",
-  ADMINISTRATOR = "ADMINISTRATOR"
-}
-
 export enum Shape {
   SQUARE = "SQUARE",
   PORTRAIT = "PORTRAIT",
   LANDSCAPE = "LANDSCAPE"
+}
+
+export enum Role {
+  EXHIBITOR = "EXHIBITOR",
+  STAFF = "STAFF",
+  ADMINISTRATOR = "ADMINISTRATOR"
 }
 
 
@@ -22,13 +22,13 @@ type EagerSubmission = {
   };
   readonly id: string;
   readonly file?: string | null;
-  readonly Contents?: (Content | null)[] | null;
   readonly confirmed?: boolean | null;
   readonly comment?: string | null;
   readonly createdAt: string;
   readonly updatedAt: string;
-  readonly collectionID: string;
+  readonly Contents?: (Content | null)[] | null;
   readonly userID: string;
+  readonly collectionID: string;
 }
 
 type LazySubmission = {
@@ -37,13 +37,13 @@ type LazySubmission = {
   };
   readonly id: string;
   readonly file?: string | null;
-  readonly Contents: AsyncCollection<Content>;
   readonly confirmed?: boolean | null;
   readonly comment?: string | null;
   readonly createdAt: string;
   readonly updatedAt: string;
-  readonly collectionID: string;
+  readonly Contents: AsyncCollection<Content>;
   readonly userID: string;
+  readonly collectionID: string;
 }
 
 export declare type Submission = LazyLoading extends LazyLoadingDisabled ? EagerSubmission : LazySubmission
@@ -62,10 +62,10 @@ type EagerContent = {
   readonly file: string;
   readonly comment: string;
   readonly seq: number;
-  readonly Tags?: (TagContent | null)[] | null;
-  readonly collectionID: string;
   readonly submissionID: string;
-  readonly userID?: string | null;
+  readonly collectionID: string;
+  readonly shape: Shape | keyof typeof Shape;
+  readonly Tags?: (ContentTag | null)[] | null;
 }
 
 type LazyContent = {
@@ -78,10 +78,10 @@ type LazyContent = {
   readonly file: string;
   readonly comment: string;
   readonly seq: number;
-  readonly Tags: AsyncCollection<TagContent>;
-  readonly collectionID: string;
   readonly submissionID: string;
-  readonly userID?: string | null;
+  readonly collectionID: string;
+  readonly shape: Shape | keyof typeof Shape;
+  readonly Tags: AsyncCollection<ContentTag>;
 }
 
 export declare type Content = LazyLoading extends LazyLoadingDisabled ? EagerContent : LazyContent
@@ -99,7 +99,7 @@ type EagerTag = {
   readonly updatedAt: string;
   readonly name: string;
   readonly comment: string;
-  readonly Contents?: (TagContent | null)[] | null;
+  readonly contents?: (ContentTag | null)[] | null;
 }
 
 type LazyTag = {
@@ -111,7 +111,7 @@ type LazyTag = {
   readonly updatedAt: string;
   readonly name: string;
   readonly comment: string;
-  readonly Contents: AsyncCollection<TagContent>;
+  readonly contents: AsyncCollection<ContentTag>;
 }
 
 export declare type Tag = LazyLoading extends LazyLoadingDisabled ? EagerTag : LazyTag
@@ -130,8 +130,8 @@ type EagerCollection = {
   readonly startCallAt?: string | null;
   readonly endCallAt?: string | null;
   readonly sequence?: number | null;
-  readonly Submissions?: (Submission | null)[] | null;
   readonly Contents?: (Content | null)[] | null;
+  readonly Submissions?: (Submission | null)[] | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -146,8 +146,8 @@ type LazyCollection = {
   readonly startCallAt?: string | null;
   readonly endCallAt?: string | null;
   readonly sequence?: number | null;
-  readonly Submissions: AsyncCollection<Submission>;
   readonly Contents: AsyncCollection<Content>;
+  readonly Submissions: AsyncCollection<Submission>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -166,8 +166,8 @@ type EagerSession = {
   readonly createdAt: string;
   readonly updatedAt: string;
   readonly expireAt: string;
+  readonly nonce: string;
   readonly userID?: string | null;
-  readonly discordToken?: string | null;
 }
 
 type LazySession = {
@@ -178,8 +178,8 @@ type LazySession = {
   readonly createdAt: string;
   readonly updatedAt: string;
   readonly expireAt: string;
+  readonly nonce: string;
   readonly userID?: string | null;
-  readonly discordToken?: string | null;
 }
 
 export declare type Session = LazyLoading extends LazyLoadingDisabled ? EagerSession : LazySession
@@ -195,10 +195,11 @@ type EagerUser = {
   readonly id: string;
   readonly createdAt: string;
   readonly updatedAt: string;
-  readonly discordId: string;
-  readonly discordName: string;
-  readonly roles: Role[] | keyof typeof Role;
+  readonly name: string;
   readonly Submissions?: (Submission | null)[] | null;
+  readonly Sessions?: (Session | null)[] | null;
+  readonly discordId: string;
+  readonly avatarUrl: string;
 }
 
 type LazyUser = {
@@ -208,10 +209,11 @@ type LazyUser = {
   readonly id: string;
   readonly createdAt: string;
   readonly updatedAt: string;
-  readonly discordId: string;
-  readonly discordName: string;
-  readonly roles: Role[] | keyof typeof Role;
+  readonly name: string;
   readonly Submissions: AsyncCollection<Submission>;
+  readonly Sessions: AsyncCollection<Session>;
+  readonly discordId: string;
+  readonly avatarUrl: string;
 }
 
 export declare type User = LazyLoading extends LazyLoadingDisabled ? EagerUser : LazyUser
@@ -220,9 +222,9 @@ export declare const User: (new (init: ModelInit<User>) => User) & {
   copyOf(source: User, mutator: (draft: MutableModel<User>) => MutableModel<User> | void): User;
 }
 
-type EagerTagContent = {
+type EagerContentTag = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<TagContent, 'id'>;
+    identifier: ManagedIdentifier<ContentTag, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
@@ -234,9 +236,9 @@ type EagerTagContent = {
   readonly updatedAt?: string | null;
 }
 
-type LazyTagContent = {
+type LazyContentTag = {
   readonly [__modelMeta__]: {
-    identifier: ManagedIdentifier<TagContent, 'id'>;
+    identifier: ManagedIdentifier<ContentTag, 'id'>;
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
@@ -248,8 +250,8 @@ type LazyTagContent = {
   readonly updatedAt?: string | null;
 }
 
-export declare type TagContent = LazyLoading extends LazyLoadingDisabled ? EagerTagContent : LazyTagContent
+export declare type ContentTag = LazyLoading extends LazyLoadingDisabled ? EagerContentTag : LazyContentTag
 
-export declare const TagContent: (new (init: ModelInit<TagContent>) => TagContent) & {
-  copyOf(source: TagContent, mutator: (draft: MutableModel<TagContent>) => MutableModel<TagContent> | void): TagContent;
+export declare const ContentTag: (new (init: ModelInit<ContentTag>) => ContentTag) & {
+  copyOf(source: ContentTag, mutator: (draft: MutableModel<ContentTag>) => MutableModel<ContentTag> | void): ContentTag;
 }

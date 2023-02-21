@@ -1,5 +1,13 @@
+import "@/utils/configure-amplify";
+import { Session, User } from "@/models";
 import { authorizeCodeGrant, getAvatarUrl, getMe } from "@/utils/discord";
-import { createToken } from "@/utils/token";
+import { generateRandomHex } from "@/utils/random";
+import {
+  createSessionToken,
+  createUserSessionToken,
+  verifySessionToken,
+} from "@/utils/token";
+import { DataStore, SortDirection } from "aws-amplify";
 import cookie from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -22,18 +30,66 @@ async function callback(req: NextApiRequest, res: NextApiResponse) {
 
     const me = await getMe(token.access_token);
 
-    // await attachDiscordToSession(session.id, token, me);
+    const payload = await verifySessionToken(state);
+    if (!payload) {
+      throw new Error("invalid state: " + state);
+    }
 
-    const sessionToken = await createToken(
-      {
-        id: me.id,
-        username: me.username,
-        displayName:
-          "display_name" in me ? (me.display_name as string) : undefined,
-        discriminator: me.discriminator,
-        avatarUrl:
-          (me.avatar && getAvatarUrl(me.id, me.avatar)) || "/anonymous.svg",
-      },
+    let session = await DataStore.query(Session, payload.session.id);
+    if (!session) {
+      throw new Error("Session not found: " + state);
+    }
+
+    const now = new Date();
+
+    if (new Date(session.expireAt) < now) {
+      throw new Error("Session expired");
+    }
+    if (session?.nonce !== payload.session.nonce) {
+      throw new Error("Session nonce unmatched");
+    }
+    if (!!session.userID) {
+      throw new Error("Session already logged-in as " + session.userID);
+    }
+
+    const existUser = (
+      await DataStore.query(User, (u) => u.discordId.eq(me.id), {
+        sort: (s) => s.createdAt(SortDirection.ASCENDING),
+      })
+    )[0];
+    const userName = me.username + "#" + me.discriminator;
+    const userAvatarUrl =
+      (me.avatar && getAvatarUrl(me.id, me.avatar)) || "/anonymous.svg";
+
+    const user = await DataStore.save(
+      existUser
+        ? User.copyOf(existUser, (u) => {
+            u.updatedAt = now.toISOString();
+            u.name = userName;
+            u.avatarUrl = userAvatarUrl;
+          })
+        : new User({
+            createdAt: now.toISOString(),
+            updatedAt: now.toISOString(),
+            discordId: me.id,
+            name: userName,
+            avatarUrl: userAvatarUrl,
+          })
+    );
+
+    session = Session.copyOf(session, (s) => {
+      (s.nonce = generateRandomHex(32)), (s.updatedAt = now.toISOString());
+      s.userID = user.id;
+      s.expireAt = new Date(
+        now.valueOf() + token.expires_in * 1000
+      ).toISOString();
+    });
+
+    await DataStore.save(session);
+
+    const sessionToken = await createUserSessionToken(
+      session,
+      user,
       token.expires_in
     );
 

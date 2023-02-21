@@ -16,10 +16,6 @@ export default function Header() {
   }, []);
   const { pending, user } = useContext(AuthContext);
 
-  const userName = useMemo(
-    () => (user ? user.username + "#" + user.discriminator : ""),
-    [user]
-  );
   return (
     <header className="text-white bg-gray-800 h-14">
       <div className="container mx-auto h-full px-4 flex flex-row items-center">
@@ -31,12 +27,12 @@ export default function Header() {
         <div className="px-8 flex flex-row items-center">
           {pending ? null : user ? (
             <div className="flex flex-row items-center gap-4 animate-fade-in-fwd">
-              {userName}
+              {user.name}
               <Avatar
                 src={user.avatarUrl}
                 width={40}
                 height={40}
-                alt={userName}
+                alt={user.name}
                 onClick={showUser}
               />
             </div>
