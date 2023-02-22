@@ -361,7 +361,7 @@ export const schema = {
                 "sequence": {
                     "name": "sequence",
                     "isArray": false,
-                    "type": "Int",
+                    "type": "Float",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -741,5 +741,5 @@ export const schema = {
     },
     "nonModels": {},
     "codegenVersion": "3.3.5",
-    "version": "ceb81a543cfc5990283b76660ec0a00c"
+    "version": "80f7f5f7cf1c444454f93072226dfd8c"
 };
