@@ -106,8 +106,8 @@ export const schema = {
                     "properties": {
                         "rules": [
                             {
-                                "allow": "private",
-                                "provider": "iam",
+                                "allow": "public",
+                                "provider": "apiKey",
                                 "operations": [
                                     "create",
                                     "update",
@@ -235,8 +235,8 @@ export const schema = {
                     "properties": {
                         "rules": [
                             {
-                                "allow": "private",
-                                "provider": "iam",
+                                "allow": "public",
+                                "provider": "apiKey",
                                 "operations": [
                                     "create",
                                     "update",
@@ -316,8 +316,8 @@ export const schema = {
                     "properties": {
                         "rules": [
                             {
-                                "allow": "private",
-                                "provider": "iam",
+                                "allow": "public",
+                                "provider": "apiKey",
                                 "operations": [
                                     "create",
                                     "update",
@@ -429,8 +429,8 @@ export const schema = {
                     "properties": {
                         "rules": [
                             {
-                                "allow": "private",
-                                "provider": "iam",
+                                "allow": "public",
+                                "provider": "apiKey",
                                 "operations": [
                                     "create",
                                     "update",
@@ -510,8 +510,8 @@ export const schema = {
                     "properties": {
                         "rules": [
                             {
-                                "allow": "private",
-                                "provider": "iam",
+                                "allow": "public",
+                                "provider": "apiKey",
                                 "operations": [
                                     "create",
                                     "update",
@@ -614,8 +614,8 @@ export const schema = {
                     "properties": {
                         "rules": [
                             {
-                                "allow": "private",
-                                "provider": "iam",
+                                "allow": "public",
+                                "provider": "apiKey",
                                 "operations": [
                                     "create",
                                     "update",

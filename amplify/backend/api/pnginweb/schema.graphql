@@ -1,4 +1,4 @@
-type Submission @model @auth(rules: [{ allow: private, provider: iam }]) {
+type Submission @model @auth(rules: [{ allow: public, provider: apiKey }]) {
   id: ID!
   file: AWSURL
   confirmed: Boolean
@@ -10,7 +10,7 @@ type Submission @model @auth(rules: [{ allow: private, provider: iam }]) {
   collectionID: ID! @index(name: "byCollection")
 }
 
-type Collection @model @auth(rules: [{ allow: private, provider: iam }]) {
+type Collection @model @auth(rules: [{ allow: public, provider: apiKey }]) {
   id: ID!
   name: String!
   startCallAt: AWSDateTime
@@ -20,7 +20,7 @@ type Collection @model @auth(rules: [{ allow: private, provider: iam }]) {
   Submissions: [Submission] @hasMany(indexName: "byCollection", fields: ["id"])
 }
 
-type Session @model @auth(rules: [{ allow: private, provider: iam }]) {
+type Session @model @auth(rules: [{ allow: public, provider: apiKey }]) {
   id: ID!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
@@ -35,7 +35,7 @@ enum Role {
   ADMINISTRATOR
 }
 
-type Content @model @auth(rules: [{ allow: private, provider: iam }]) {
+type Content @model @auth(rules: [{ allow: public, provider: apiKey }]) {
   id: ID!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
@@ -54,7 +54,7 @@ enum Shape {
   LANDSCAPE
 }
 
-type Tag @model @auth(rules: [{ allow: private, provider: iam }]) {
+type Tag @model @auth(rules: [{ allow: public, provider: apiKey }]) {
   id: ID!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
@@ -63,7 +63,7 @@ type Tag @model @auth(rules: [{ allow: private, provider: iam }]) {
   contents: [Content] @manyToMany(relationName: "ContentTag")
 }
 
-type User @model @auth(rules: [{ allow: private, provider: iam }]) {
+type User @model @auth(rules: [{ allow: public, provider: apiKey }]) {
   id: ID!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!

@@ -4,7 +4,10 @@
     "apiName": "pnginweb",
     "serviceName": "AppSync",
     "defaultAuthType": {
-      "mode": "AWS_IAM"
+      "mode": "API_KEY",
+      "expirationTime": 2,
+      "apiKeyExpirationDate": "2023-02-26T18:07:33.562Z",
+      "keyDescription": "2day"
     },
     "additionalAuthTypes": [],
     "conflictResolution": {

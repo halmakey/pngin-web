@@ -6,7 +6,12 @@
         "authConfig": {
           "additionalAuthenticationProviders": [],
           "defaultAuthentication": {
-            "authenticationType": "AWS_IAM"
+            "apiKeyConfig": {
+              "apiKeyExpirationDate": "2023-02-26T18:07:33.562Z",
+              "apiKeyExpirationDays": 2,
+              "description": "2day"
+            },
+            "authenticationType": "API_KEY"
           }
         }
       },
