@@ -1,5 +1,5 @@
-import "@/utils/configure-amplify";
 import { Session, User } from "@/models";
+import { getDataStore } from "@/utils/configure-amplify";
 import { authorizeCodeGrant, getAvatarUrl, getMe } from "@/utils/discord";
 import { generateRandomHex } from "@/utils/random";
 import {
@@ -7,11 +7,13 @@ import {
   createUserSessionToken,
   verifySessionToken,
 } from "@/utils/token";
-import { DataStore, SortDirection } from "aws-amplify";
+import { SortDirection } from "aws-amplify";
 import cookie from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 
 async function callback(req: NextApiRequest, res: NextApiResponse) {
+  const DataStore = await getDataStore()
+
   const { code, state } = req.query;
   // check parameters
   if (

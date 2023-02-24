@@ -1,4 +1,4 @@
-type Submission @model @auth(rules: [{allow: public}]) {
+type Submission @model @auth(rules: [{ allow: private, provider: iam }]) {
   id: ID!
   file: AWSURL
   confirmed: Boolean
@@ -10,7 +10,7 @@ type Submission @model @auth(rules: [{allow: public}]) {
   collectionID: ID! @index(name: "byCollection")
 }
 
-type Collection @model @auth(rules: [{allow: public}]) {
+type Collection @model @auth(rules: [{ allow: private, provider: iam }]) {
   id: ID!
   name: String!
   startCallAt: AWSDateTime
@@ -20,7 +20,7 @@ type Collection @model @auth(rules: [{allow: public}]) {
   Submissions: [Submission] @hasMany(indexName: "byCollection", fields: ["id"])
 }
 
-type Session @model @auth(rules: [{allow: public}]) {
+type Session @model @auth(rules: [{ allow: private, provider: iam }]) {
   id: ID!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
@@ -35,7 +35,7 @@ enum Role {
   ADMINISTRATOR
 }
 
-type Content @model @auth(rules: [{allow: public}]) {
+type Content @model @auth(rules: [{ allow: private, provider: iam }]) {
   id: ID!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
@@ -54,7 +54,7 @@ enum Shape {
   LANDSCAPE
 }
 
-type Tag @model @auth(rules: [{allow: public}]) {
+type Tag @model @auth(rules: [{ allow: private, provider: iam }]) {
   id: ID!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
@@ -63,7 +63,7 @@ type Tag @model @auth(rules: [{allow: public}]) {
   contents: [Content] @manyToMany(relationName: "ContentTag")
 }
 
-type User @model @auth(rules: [{allow: public}]) {
+type User @model @auth(rules: [{ allow: private, provider: iam }]) {
   id: ID!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
@@ -73,4 +73,3 @@ type User @model @auth(rules: [{allow: public}]) {
   discordId: String!
   avatarUrl: String!
 }
- 

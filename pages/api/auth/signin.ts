@@ -1,16 +1,16 @@
-import '@/utils/configure-amplify'
 import { Session } from "@/models";
 import { getSignInUrl } from "@/utils/discord";
 import { generateRandomHex } from "@/utils/random";
 import { createSessionToken, verifySessionToken } from "@/utils/token";
-import { DataStore } from "aws-amplify";
 import cookie from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getDataStore } from '@/utils/configure-amplify';
 
 // 1h
 const Age1H = 60 * 60;
 
 async function signin(req: NextApiRequest, res: NextApiResponse) {
+  const DataStore = await getDataStore()
   const nonce = generateRandomHex(32);
 
   const now = Date.now();

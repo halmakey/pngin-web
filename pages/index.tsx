@@ -1,31 +1,48 @@
+import { ListCollectionsQuery } from "@/API";
 import Header from "@/components/Header";
 import Main from "@/components/Main";
 import { SITE_TITLE } from "@/constants/values";
-import AuthContext from "@/contexts/auth-context";
-import { useAsyncEffect } from "@/hooks/useAsyncEffect";
+import { listCollections } from "@/graphql/queries";
+import { GraphQLQuery } from "@aws-amplify/api";
+import { API, graphqlOperation } from "aws-amplify";
+import { GetStaticProps } from "next";
 import Head from "next/head";
-import { useRouter } from "next/router";
-import { useContext } from "react";
 
-export default function Page() {
-  const { refresh } = useContext(AuthContext);
-  const router = useRouter();
+interface CollectionProps {
+  id: string;
+  name: string;
+}
 
-  useAsyncEffect(async () => {
-    if (router.query.refresh !== "") {
-      return;
-    }
-    await refresh();
-    router.replace("/");
-  }, [router.query.refresh]);
+interface Props {
+  activeCollections: CollectionProps[];
+}
 
+export default function Page({ activeCollections }: Props) {
+  console.log(activeCollections)
   return (
     <>
       <Head>
         <title>{SITE_TITLE}</title>
       </Head>
       <Header />
-      <Main>はろー</Main>
+      <Main>
+        {activeCollections.map((c) => (
+          <div key={c.id}>{c.name}</div>
+        ))}
+      </Main>
     </>
   );
 }
+
+export const getStaticProps: GetStaticProps = async () => {
+  const result = await API.graphql<GraphQLQuery<ListCollectionsQuery>>({
+    query: listCollections,
+  });
+
+  return {
+    props: {
+      activeCollections: result.data?.listCollections?.items ?? [],
+    },
+    revalidate: 2,
+  };
+};
