@@ -596,6 +596,16 @@ export enum ModelSortDirection {
 }
 
 
+export type ModelStringKeyConditionInput = {
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+};
+
 export type ModelSubscriptionSubmissionFilterInput = {
   id?: ModelSubscriptionIDInput | null,
   file?: ModelSubscriptionStringInput | null,
@@ -2065,6 +2075,35 @@ export type ContentsByCollectionIDQuery = {
       submissionID: string,
       collectionID: string,
       shape: Shape,
+      _version: number,
+      _deleted?: boolean | null,
+      _lastChangedAt: number,
+    } | null >,
+    nextToken?: string | null,
+    startedAt?: number | null,
+  } | null,
+};
+
+export type ListUsersByDiscordIdQueryVariables = {
+  discordId: string,
+  createdAt?: ModelStringKeyConditionInput | null,
+  sortDirection?: ModelSortDirection | null,
+  filter?: ModelUserFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListUsersByDiscordIdQuery = {
+  listUsersByDiscordId?:  {
+    __typename: "ModelUserConnection",
+    items:  Array< {
+      __typename: "User",
+      id: string,
+      createdAt: string,
+      updatedAt: string,
+      name: string,
+      discordId: string,
+      avatarUrl: string,
       _version: number,
       _deleted?: boolean | null,
       _lastChangedAt: number,

@@ -70,6 +70,7 @@ type User @model @auth(rules: [{ allow: public, provider: apiKey }]) {
   name: String!
   Submissions: [Submission] @hasMany(indexName: "byUser", fields: ["id"])
   Sessions: [Session] @hasMany(indexName: "byUser", fields: ["id"])
-  discordId: String! @index(name: "byCreatedAt", sortKeyFields: ["createdAt"], queryField: "listUsersByCreatedAt")
+  discordId: String! @index(name: "byDiscordId", sortKeyFields: ["createdAt"], queryField: "listUsersByDiscordId")
   avatarUrl: String!
 }
+ 

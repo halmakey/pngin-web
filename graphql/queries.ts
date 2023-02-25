@@ -700,6 +700,39 @@ export const contentsByCollectionID = /* GraphQL */ `
     }
   }
 `;
+export const listUsersByDiscordId = /* GraphQL */ `
+  query ListUsersByDiscordId(
+    $discordId: String!
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUsersByDiscordId(
+      discordId: $discordId
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        createdAt
+        updatedAt
+        name
+        discordId
+        avatarUrl
+        _version
+        _deleted
+        _lastChangedAt
+      }
+      nextToken
+      startedAt
+    }
+  }
+`;
 export const contentTagsByContentId = /* GraphQL */ `
   query ContentTagsByContentId(
     $contentId: ID!

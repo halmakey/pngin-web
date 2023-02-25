@@ -1,18 +1,17 @@
-import { Session } from "@/models";
+import { deleteSession } from "@/utils/appsync/session";
 import "@/utils/configure-amplify";
-import { getDataStore } from "@/utils/configure-amplify";
-import { verifySessionToken, verifyUserToken } from "@/utils/token";
+import { configureAmplifyOnce } from "@/utils/configure-amplify";
+import { verifySessionToken } from "@/utils/token";
 import cookie from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 
-
 async function signout(req: NextApiRequest, res: NextApiResponse) {
-  const DataStore = await getDataStore()
+  await configureAmplifyOnce();
   const token = req.cookies.token;
   if (token) {
     const payload = await verifySessionToken(token);
     if (payload) {
-      await DataStore.delete(Session, payload.session.id).catch(() => {
+      await deleteSession(payload.session.id).catch(() => {
         /* NOP */
       });
     }

@@ -610,6 +610,17 @@ export const schema = {
                     "properties": {}
                 },
                 {
+                    "type": "key",
+                    "properties": {
+                        "name": "byDiscordId",
+                        "queryField": "listUsersByDiscordId",
+                        "fields": [
+                            "discordId",
+                            "createdAt"
+                        ]
+                    }
+                },
+                {
                     "type": "auth",
                     "properties": {
                         "rules": [
