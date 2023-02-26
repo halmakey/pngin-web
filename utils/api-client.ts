@@ -1,4 +1,4 @@
-import { ApiUser } from "@/types/api/user";
+import type { UserPayload } from "./token";
 
 async function validate<T>(promise: Promise<Response>): Promise<T> {
   const res = await promise;
@@ -14,5 +14,5 @@ async function validate<T>(promise: Promise<Response>): Promise<T> {
 }
 
 export function apiGetMe() {
-  return validate<ApiUser>(fetch("/api/user"));
+  return validate<UserPayload>(fetch("/api/user"));
 }

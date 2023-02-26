@@ -1,4 +1,4 @@
-import { Collection } from "@/types/api/collection";
+import { Collection } from "@/types/model";
 
 export function SubmissionEntryCard({
   collection,

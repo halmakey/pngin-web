@@ -1,14 +1,14 @@
 import { useAsyncCallback } from "@/hooks/useAsyncCallback";
 import { useAsyncEffect } from "@/hooks/useAsyncEffect";
-import { ApiUser } from "@/types/api/user";
-import { apiGetMe } from "@/utils/api";
+import { apiGetMe } from "@/utils/api-client";
 import { fail } from "@/utils/functions";
+import { UserPayload } from "@/utils/token";
 import { createContext, ReactNode, useMemo, useState } from "react";
 
 interface AuthContext {
   pending: boolean;
-  user?: ApiUser;
-  refresh(): Promise<ApiUser | undefined>;
+  user?: UserPayload;
+  refresh(): Promise<UserPayload | undefined>;
 }
 
 const AuthContext = createContext<AuthContext>({
@@ -18,7 +18,7 @@ const AuthContext = createContext<AuthContext>({
 export default AuthContext;
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<ApiUser>();
+  const [user, setUser] = useState<UserPayload>();
 
   const { pending: pendingGetMe, call: refresh } =
     useAsyncCallback(async () => {

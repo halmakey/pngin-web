@@ -1,15 +1,11 @@
-import { getSession, updateSession } from "@/utils/appsync/session";
-import { findUserByDiscordId, updateUser } from "@/utils/appsync/user";
-import { configureAmplifyOnce } from "@/utils/configure-amplify";
 import { authorizeCodeGrant, getAvatarUrl, getMe } from "@/utils/discord";
+import { getSession, updateSession } from "@/utils/dynamo/session";
+import { createUser, getUser, updateUser } from "@/utils/dynamo/user";
 import { createUserSessionToken, verifySessionToken } from "@/utils/token";
 import cookie from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 
-
 async function callback(req: NextApiRequest, res: NextApiResponse) {
-  await configureAmplifyOnce()
-
   const { code, state } = req.query;
   // check parameters
   if (
@@ -40,39 +36,39 @@ async function callback(req: NextApiRequest, res: NextApiResponse) {
 
     const now = new Date();
 
-    if (new Date(session.expireAt) < now) {
+    if (session.ttl < now.valueOf() / 1000) {
       throw new Error("Session expired");
     }
     if (session?.nonce !== payload.session.nonce) {
       throw new Error("Session nonce unmatched");
     }
-    if (!!session.userID) {
-      throw new Error("Session already logged-in as " + session.userID);
+    if (!!session.userId) {
+      throw new Error("Session already logged-in as " + session.userId);
     }
 
-    const existUser = await findUserByDiscordId(me.id);
     const userName = me.username + "#" + me.discriminator;
     const userAvatarUrl =
       (me.avatar && getAvatarUrl(me.id, me.avatar)) || "/anonymous.svg";
 
-    const user = await updateUser({
-      id: me.id,
-      name: userName,
-      discordId: me.id,
-      avatarUrl: userAvatarUrl,
-      createdAt: existUser?.createdAt ?? now.toISOString(),
-      updatedAt: now.toISOString()
-    })
+    const userId = `user-${me.id}` as const
+    let user = await getUser(userId);
+    if (!user) {
+      user = await createUser({
+        id: userId,
+        name: userName,
+        avatarUrl: userAvatarUrl
+      })
+    } else {
+      user = await updateUser({
+        id: userId,
+        name: userName,
+        avatarUrl: userAvatarUrl
+      });
+    }
 
     session = await updateSession({
       id: session.id,
-      createdAt: session.createdAt,
-      updatedAt: now.toISOString(),
-      expireAt: new Date(
-        now.valueOf() + token.expires_in * 1000
-      ).toISOString(),
-      nonce: session.nonce,
-      userID: me.id
+      userId
     })
 
     const sessionToken = await createUserSessionToken(

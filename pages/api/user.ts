@@ -1,6 +1,5 @@
-import { ApiUser } from "@/types/api/user";
 import { checkAllEnvs } from "@/utils/check-env";
-import { verifyUserToken } from "@/utils/token";
+import { UserPayload, verifyUserToken } from "@/utils/token";
 import { NextApiRequest, NextApiResponse } from "next";
 
 checkAllEnvs();
@@ -14,7 +13,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
 async function getMe(
   req: NextApiRequest,
-  res: NextApiResponse<ApiUser | { [key: string]: never }>
+  res: NextApiResponse<UserPayload | { [key: string]: never }>
 ) {
   const { token } = req.cookies;
   const payload = token && (await verifyUserToken(token));

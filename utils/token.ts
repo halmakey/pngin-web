@@ -13,7 +13,7 @@ const preparePrivateKey = importJWK(JSON.parse(JWT_PRIVATE_KEY), ES512);
 const preparePublicKey = importJWK(JSON.parse(JWT_PUBLIC_KEY), ES512);
 
 export interface SessionPayload {
-  id: string;
+  id: `session-${string}`;
   nonce: string;
 }
 
@@ -42,6 +42,7 @@ function isSessionPayload(payload: unknown): payload is SessionPayload {
     typeof payload === "object" &&
     "id" in payload &&
     typeof payload.id === "string" &&
+    payload.id.startsWith("session-") &&
     "nonce" in payload &&
     typeof payload.nonce === "string"
   );
@@ -58,7 +59,7 @@ export async function verifySessionToken(token: string) {
 }
 
 export interface UserPayload {
-  id: string;
+  id: `user-${string}`;
   name: string;
   avatarUrl: string;
 }
@@ -94,6 +95,7 @@ function isUserPayload(payload: unknown): payload is UserPayload {
     typeof payload === "object" &&
     "id" in payload &&
     typeof payload.id === "string" &&
+    payload.id.startsWith("user-") &&
     "name" in payload &&
     typeof payload.name === "string" &&
     "avatarUrl" in payload &&

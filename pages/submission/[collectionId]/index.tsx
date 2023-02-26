@@ -2,11 +2,11 @@ import Header from "@/components/Header";
 import Main from "@/components/Main";
 import { SubmissionEntryCard } from "@/components/thatched/submission/SubmissionEntryCard";
 import { SITE_TITLE } from "@/constants/values";
-import { Collection } from "@/types/api/collection";
-import { getCollection } from "@/utils/appsync/collection";
+import { getCollection, isCollectionId } from "@/utils/dynamo/collection";
 import { verifyUserToken } from "@/utils/token";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
+import { Collection } from "@/types/model";
 
 interface Props {
   collection: Collection;
@@ -36,16 +36,21 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   const payload = token && (await verifyUserToken(token));
   const userId = payload && payload.user.id;
 
-  const collectionId = String(params?.collectionId);
+  const collectionId = params?.collectionId;
+  if (!isCollectionId(collectionId)) {
+    return {
+      notFound: true,
+    };
+  }
   const collection = await getCollection(collectionId);
-
-  return collection
-    ? {
-        props: {
-          collection,
-        },
-      }
-    : {
-        notFound: true,
-      };
+  if (!collection) {
+    return {
+      notFound: true,
+    };
+  }
+  return {
+    props: {
+      collection,
+    },
+  };
 };

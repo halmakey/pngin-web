@@ -1,25 +1,24 @@
-import { createSession } from "@/utils/appsync/session";
-import { configureAmplifyOnce } from "@/utils/configure-amplify";
 import { getSignInUrl } from "@/utils/discord";
+import { createSession } from "@/utils/dynamo/session";
 import { generateRandomHex } from "@/utils/random";
 import { createSessionToken } from "@/utils/token";
 import cookie from "cookie";
+import { nanoid } from "nanoid";
 import { NextApiRequest, NextApiResponse } from "next";
 
 // 1h
 const Age1H = 60 * 60;
 
 async function signin(req: NextApiRequest, res: NextApiResponse) {
-  await configureAmplifyOnce()
-
+  const id = `session-${nanoid()}` as const;
   const nonce = generateRandomHex(32);
-
   const now = Date.now();
 
   const session = await createSession({
-    expireAt: new Date(now + Age1H * 1000).toISOString(),
-    nonce
-  })
+    id,
+    nonce,
+    ttl: Math.floor(now / 1000) + Age1H,
+  });
 
   const state = await createSessionToken(session, Age1H);
   const signInUrl = getSignInUrl(state);
