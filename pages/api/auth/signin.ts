@@ -1,5 +1,5 @@
 import { getSignInUrl } from "@/utils/discord";
-import { createSession } from "@/utils/dynamo/session";
+import { createSession } from "@/models/session";
 import { generateRandomHex } from "@/utils/random";
 import { createSessionToken } from "@/utils/token";
 import cookie from "cookie";

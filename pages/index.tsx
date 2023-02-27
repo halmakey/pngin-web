@@ -3,7 +3,7 @@ import Main from "@/components/Main";
 import CollectionCard from "@/components/thatched/CollectionCard";
 import { SITE_TITLE } from "@/constants/values";
 import { Collection } from "@/types/model";
-import { listAllCollection } from "@/utils/dynamo/collection";
+import { listAllCollection } from "@/models/collection";
 import { GetStaticProps } from "next";
 import Head from "next/head";
 interface Props {

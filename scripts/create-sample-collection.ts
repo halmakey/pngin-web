@@ -3,7 +3,7 @@
 import * as dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 
-import { createCollection, listAllCollection } from "@/utils/dynamo/collection";
+import { createCollection, listAllCollection } from "@/models/collection";
 import { nanoid } from "nanoid";
 
 async function main() {

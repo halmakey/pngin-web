@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 import Main from "@/components/Main";
 import { SubmissionEntryCard } from "@/components/thatched/submission/SubmissionEntryCard";
 import { SITE_TITLE } from "@/constants/values";
-import { getCollection, isCollectionId } from "@/utils/dynamo/collection";
+import { getCollection, isCollectionId } from "@/models/collection";
 import { verifyUserToken } from "@/utils/token";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
