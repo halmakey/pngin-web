@@ -80,7 +80,7 @@ export function SubmissionEntryCard({
       {creditImage && (
         <img width="350" height="200" src={creditImageSrc} alt="Credit" />
       )}
-      <FillButton type="submit">作品応募</FillButton>
+      <FillButton type="submit">作品投稿</FillButton>
     </form>
   );
 }
