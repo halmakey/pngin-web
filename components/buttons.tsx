@@ -1,10 +1,15 @@
-import { DOMAttributes, ReactNode } from "react";
+import { DOMAttributes, HTMLProps, ReactNode } from "react";
 
-export interface ButtonProps extends DOMAttributes<HTMLButtonElement> {
-  children: ReactNode;
+type Props = React.DetailedHTMLProps<
+  React.ButtonHTMLAttributes<HTMLButtonElement>,
+  HTMLButtonElement
+>;
+
+export function FillButton(props: Props) {
+  return <button {...props} className="transition border border-gray-800 px-4 py-2" />;
 }
 
-export function BorderButton(props: ButtonProps) {
+export function BorderButton(props: Props) {
   return (
     <button
       {...props}
@@ -13,7 +18,7 @@ export function BorderButton(props: ButtonProps) {
   );
 }
 
-export function InvertBorderButton(props: ButtonProps) {
+export function InvertBorderButton(props: Props) {
   return (
     <button
       {...props}

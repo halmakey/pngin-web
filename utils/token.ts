@@ -19,7 +19,8 @@ export interface SessionPayload {
 
 export async function createSessionToken(
   session: SessionPayload,
-  expiresIn: number
+  expiresIn: number,
+  callback?: string
 ): Promise<string> {
   const key = await preparePrivateKey;
   const jwt = await new SignJWT({
@@ -27,6 +28,7 @@ export async function createSessionToken(
       id: session.id,
       nonce: session.nonce,
     },
+    callback,
   })
     .setProtectedHeader({ alg: ES512, typ: "JWT" })
     .setIssuedAt()
@@ -54,7 +56,7 @@ export async function verifySessionToken(token: string) {
     algorithms: [ES512],
   });
   if (isSessionPayload(payload.session)) {
-    return payload as { session: SessionPayload };
+    return payload as { session: SessionPayload; callback?: string };
   }
 }
 

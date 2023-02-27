@@ -50,26 +50,26 @@ async function callback(req: NextApiRequest, res: NextApiResponse) {
     const userAvatarUrl =
       (me.avatar && getAvatarUrl(me.id, me.avatar)) || "/anonymous.svg";
 
-    const userId = `user-${me.id}` as const
+    const userId = `user-${me.id}` as const;
     let user = await getUser(userId);
     if (!user) {
       user = await createUser({
         id: userId,
         name: userName,
-        avatarUrl: userAvatarUrl
-      })
+        avatarUrl: userAvatarUrl,
+      });
     } else {
       user = await updateUser({
         id: userId,
         name: userName,
-        avatarUrl: userAvatarUrl
+        avatarUrl: userAvatarUrl,
       });
     }
 
     session = await updateSession({
       id: session.id,
-      userId
-    })
+      userId,
+    });
 
     const sessionToken = await createUserSessionToken(
       session,
@@ -87,7 +87,7 @@ async function callback(req: NextApiRequest, res: NextApiResponse) {
           path: "/",
         })
       )
-      .redirect("/");
+      .redirect(payload.callback || "/");
   } catch (err) {
     console.error(err);
     return res.redirect("/");

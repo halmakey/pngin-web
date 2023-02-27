@@ -7,6 +7,7 @@ import { verifyUserToken } from "@/utils/token";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { Collection } from "@/types/model";
+import { parseBody } from "next/dist/server/api-utils/node";
 
 interface Props {
   collection: Collection;
@@ -35,19 +36,38 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   const token = req.cookies.token;
   const payload = token && (await verifyUserToken(token));
   const userId = payload && payload.user.id;
-
   const collectionId = params?.collectionId;
+
   if (!isCollectionId(collectionId)) {
     return {
       notFound: true,
     };
   }
+
   const collection = await getCollection(collectionId);
   if (!collection) {
     return {
       notFound: true,
     };
   }
+
+  if (!userId) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/api/auth/signin?callback=${encodeURIComponent(
+          `/submission/${collectionId}`
+        )}`,
+      },
+    };
+  }
+
+  if (req.method === "POST") {
+    console.log({ req });
+    const result = await parseBody(req, "1mb");
+    console.log({ credit: result.credit });
+  }
+
   return {
     props: {
       collection,

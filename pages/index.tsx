@@ -18,9 +18,11 @@ export default function Page({ collection }: Props) {
       </Head>
       <Header />
       <Main>
+        <div className="flex flex-col gap-4">
         {collection.map((c) => (
           <CollectionCard key={c.id} collection={c} />
         ))}
+        </div>
       </Main>
     </>
   );
