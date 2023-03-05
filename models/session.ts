@@ -6,7 +6,12 @@ import {
   UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
-import client, { TableName } from "./client";
+import client, {
+  InputSource,
+  nowISOString,
+  TableName,
+  withCreatedUpdatedAt,
+} from "./client";
 import { UserID } from "./user";
 
 export type SessionID = `session-${string}`;
@@ -32,15 +37,12 @@ export async function getSession(id: SessionID): Promise<Session | undefined> {
 }
 
 export async function createSession(
-  input: Omit<Session, "type" | "createdAt" | "updatedAt">
+  input: InputSource<Session>
 ): Promise<Session> {
-  const now = new Date().toISOString();
-  const item: Session = {
+  const item = withCreatedUpdatedAt({
     ...input,
-    type: "session",
-    createdAt: now,
-    updatedAt: now,
-  };
+    type: "session" as const,
+  });
   await client.send(
     new PutItemCommand({
       TableName,
@@ -55,13 +57,12 @@ export async function updateSession(input: {
   id: SessionID;
   userId: UserID;
 }): Promise<Session> {
-  const now = new Date().toISOString();
   const result = await client.send(
     new UpdateItemCommand({
       TableName,
       Key: { id: { S: input.id } },
       AttributeUpdates: {
-        updatedAt: { Value: { S: now } },
+        updatedAt: { Value: { S: nowISOString() } },
         userId: { Value: { S: input.userId } },
       },
       ReturnValues: ReturnValue.ALL_NEW,

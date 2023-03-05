@@ -4,7 +4,12 @@ import {
   QueryCommand,
 } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
-import client, { ByTypeIndexName, TableName } from "./client";
+import client, {
+  ByTypeIndexName,
+  InputSource,
+  TableName,
+  withCreatedUpdatedAt,
+} from "./client";
 
 export type CollectionID = `collection-${string}`;
 
@@ -20,7 +25,7 @@ export interface Collection {
 }
 
 export function isCollectionId(id: unknown): id is CollectionID {
-  return typeof id === 'string' && id.startsWith("collection-")
+  return typeof id === "string" && id.startsWith("collection-");
 }
 
 export async function listAllCollection(): Promise<Collection[]> {
@@ -54,15 +59,12 @@ export async function getCollection(
 }
 
 export async function createCollection(
-  input: Omit<Collection, "type" | "createdAt" | "updatedAt">
+  input: InputSource<Collection>
 ): Promise<Collection> {
-  const now = new Date().toISOString();
-  const item: Collection = {
+  const item = withCreatedUpdatedAt({
     ...input,
-    type: "collection",
-    createdAt: now,
-    updatedAt: now,
-  };
+    type: "collection" as const,
+  });
   await client.send(
     new PutItemCommand({
       TableName,

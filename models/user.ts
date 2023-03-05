@@ -5,7 +5,7 @@ import {
   UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
-import client, { TableName } from "./client";
+import client, { InputSource, TableName, withCreatedUpdatedAt } from "./client";
 
 export type UserID = `user-${string}`;
 
@@ -32,16 +32,11 @@ export async function getUser(id: UserID): Promise<User | undefined> {
   return result.Item && (unmarshall(result.Item) as User);
 }
 
-export async function createUser(
-  input: Omit<User, "type" | "createdAt" | "updatedAt">
-): Promise<User> {
-  const now = new Date().toISOString();
-  const item: User = {
+export async function createUser(input: InputSource<User>): Promise<User> {
+  const item = withCreatedUpdatedAt({
     ...input,
-    type: "user",
-    createdAt: now,
-    updatedAt: now,
-  };
+    type: "user" as const,
+  });
   await client.send(
     new PutItemCommand({
       TableName,
@@ -65,6 +60,9 @@ export async function updateUser(input: {
       AttributeUpdates: {
         name: {
           Value: { S: input.name },
+        },
+        avatarUrl: {
+          Value: { S: input.avatarUrl },
         },
         updatedAt: {
           Value: { S: now },
