@@ -7,94 +7,99 @@ import { verifyUserToken } from "@/utils/token";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { Collection } from "@/types/model";
-import { parseBody } from "next/dist/server/api-utils/node";
-import { useRouter } from "next/router";
-import { ChangeEvent, FormEvent, useCallback, useMemo, useRef } from "react";
-import { useImageProcessor } from "@/hooks/useImageProcessor";
-import { FillButton } from "@/components/buttons";
+import { FormEvent, useCallback, useContext, useRef, useState } from "react";
+import { BorderButton, FillButton } from "@/components/buttons";
+import { SubmissionCredit } from "@/components/submission/SubmissionCredit";
+import AuthContext from "@/contexts/auth-context";
+import Script from "next/script";
+import { postSubmission } from "@/utils/api-client";
 
 interface Props {
   collection: Collection;
-  // submission?: Submission;
+  submission: Submission | null;
 }
 
-export default function Page({ collection }: Props) {
-  const router = useRouter();
+export default function Page({ collection, submission }: Props) {
+  const { user } = useContext(AuthContext);
 
   const nameRef = useRef<HTMLInputElement>(null);
-  const creditRef = useRef<HTMLInputElement>(null);
-  const { setFile: setCreditFile, result: creditImage } = useImageProcessor({
-    width: 700,
-    height: 400,
-  });
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log({ e });
-    if (!nameRef.current || !creditRef.current) {
+    if (!nameRef.current) {
       return;
     }
-    if (creditRef.current.files?.length !== 1) {
-      return;
-    }
-  };
 
-  const handleChangeImage = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      if (e.target.files?.length !== 1) {
-        return;
-      }
-      const file = e.target.files[0];
-      if (!file) {
-        return;
-      }
-      setCreditFile(file);
-    },
-    [setCreditFile]
-  );
+    grecaptcha.ready(async () => {
+      const token = await grecaptcha.execute(
+        process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
+        { action: "submit" }
+      );
+      postSubmission({
+        collectionId: collection.id,
+        token,
+        name: nameRef.current?.value || '',
+        comment: ''
+      })
+    });
+  }, [collection.id]);
 
-  const creditImageSrc = useMemo(
-    () => creditImage && URL.createObjectURL(new Blob([creditImage])),
-    [creditImage]
-  );
+  const [creditImage, setCreditImage] = useState<ArrayBuffer>();
+
+  const [isOpenSubmission, setOpenSubmission] = useState(!!submission);
+  const openSubmission = useCallback(() => setOpenSubmission(true), []);
 
   return (
     <>
+      <Script
+        strategy="afterInteractive"
+        src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}
+      />
       <Head>
         <title>{`${collection.name} | ${SITE_TITLE}`}</title>
       </Head>
       <Header />
       <Main>
-        <h1>{collection.name} 作品投稿フォーム</h1>
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col items-start gap-2"
-        >
-          <label htmlFor="name">投稿者名: </label>
-          <input
-            ref={nameRef}
-            className="border border-gray-500 p-1 outline-none"
-            type="text"
-            id="name"
-            name="name"
-            defaultValue="テスト"
-            required
-          />
-          <label htmlFor="credit">クレジット画像: </label>
-          <input
-            ref={creditRef}
-            className="border border-gray-500 p-1"
-            type="file"
-            id="credit"
-            name="credit"
-            accept="image/png,image/jpeg,image/gif"
-            onChange={handleChangeImage}
-          />
-          {creditImage && (
-            <img width="350" height="200" src={creditImageSrc} alt="Credit" />
-          )}
-          <FillButton type="submit">作品投稿</FillButton>
-        </form>
+        <h1 className="my-4 text-xl">{collection.name}</h1>
+        {!isOpenSubmission && (
+          <BorderButton onClick={openSubmission}>応募する</BorderButton>
+        )}
+        {isOpenSubmission && (
+          <form
+            onSubmit={handleSubmit}
+            className="my-4 flex flex-col items-center gap-2 border border-gray-400 p-4"
+          >
+            <label htmlFor="name">出展者名: </label>
+            <input
+              ref={nameRef}
+              className="border border-gray-500 p-1 outline-none"
+              type="text"
+              id="name"
+              name="name"
+              placeholder="投稿者名を入力する"
+              defaultValue={submission?.name || user?.name}
+              required
+            />
+            <label htmlFor="credit">クレジット画像: </label>
+            <SubmissionCredit onChange={setCreditImage} />
+            ※あとから変更可能です
+            <FillButton type="submit" disabled={!creditImage}>
+              {submission ? "更新" : "出展登録"}
+            </FillButton>
+            <span className="text-center text-xs">
+              This site is protected by reCAPTCHA and the Google
+              <br />
+              <a href="https://policies.google.com/privacy">
+                Privacy Policy
+              </a>{" "}
+              and
+              <a href="https://policies.google.com/terms">
+                Terms of Service
+              </a>{" "}
+              apply.
+            </span>
+          </form>
+        )}
       </Main>
     </>
   );
@@ -133,15 +138,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     };
   }
 
-  if (req.method === "POST") {
-    console.log({ req });
-    const result = await parseBody(req, "1mb");
-    console.log({ credit: result.credit });
-  }
+  const submission = (await getSubmission(userId, collectionId)) ?? null;
 
   return {
     props: {
       collection,
+      submission,
     },
   };
 };
