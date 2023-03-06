@@ -1,6 +1,6 @@
 import { authorizeCodeGrant, getAvatarUrl, getMe } from "@/utils/discord";
-import { getSession, updateSession } from "@/models/session";
-import { createUser, getUser, updateUser } from "@/models/user";
+import { getSession, updateSession } from "@/models/Session";
+import { createUser, getUser, updateUser } from "@/models/User";
 import { createUserSessionToken, verifySessionToken } from "@/utils/token";
 import cookie from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";

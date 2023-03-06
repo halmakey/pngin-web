@@ -12,7 +12,7 @@ import client, {
   TableName,
   withCreatedUpdatedAt,
 } from "./client";
-import { UserID } from "./user";
+import type { UserID } from "./User";
 
 export const type = "session" as const;
 export type SessionID = `session-${string}`;

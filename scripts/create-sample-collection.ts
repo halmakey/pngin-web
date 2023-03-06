@@ -3,15 +3,15 @@
 import * as dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 
-import { createCollection, listAllCollection } from "@/models/collection";
+import * as Collection from "@/models/Collection";
 import { nanoid } from "nanoid";
 
 async function main() {
-  const allCollection = await listAllCollection();
+  const allCollection = await Collection.listAllCollection();
 
   const nextNumber = allCollection.length + 1;
   const now = new Date();
-  const collection = await createCollection({
+  const collection = await Collection.createCollection({
     id: `collection-${nanoid()}`,
     name: `TEST COLLECTION ${nextNumber}`,
     sequence: nextNumber,

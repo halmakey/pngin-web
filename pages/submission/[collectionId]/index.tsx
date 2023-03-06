@@ -1,7 +1,8 @@
 import Header from "@/components/Header";
 import Main from "@/components/Main";
 import { SITE_TITLE } from "@/constants/values";
-import { getCollection, isCollectionId } from "@/models/collection";
+import { getCollection, isCollectionId } from "@/models/Collection";
+import { getSubmission, Submission } from "@/models/Submission";
 import { verifyUserToken } from "@/utils/token";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
