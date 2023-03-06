@@ -21,28 +21,33 @@ interface Props {
 
 export default function Page({ collection, submission }: Props) {
   const { user } = useContext(AuthContext);
+  const [currentSubmission, setCurrentSubmission] = useState(submission);
 
   const nameRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!nameRef.current) {
-      return;
-    }
+  const handleSubmit = useCallback(
+    (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (!nameRef.current) {
+        return;
+      }
 
-    grecaptcha.ready(async () => {
-      const token = await grecaptcha.execute(
-        process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
-        { action: "submit" }
-      );
-      postSubmission({
-        collectionId: collection.id,
-        token,
-        name: nameRef.current?.value || '',
-        comment: ''
-      })
-    });
-  }, [collection.id]);
+      grecaptcha.ready(async () => {
+        const token = await grecaptcha.execute(
+          process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
+          { action: "submit" }
+        );
+        const { submission } = await postSubmission({
+          collectionId: collection.id,
+          token,
+          name: nameRef.current?.value || "",
+          comment: "",
+        });
+        setCurrentSubmission(submission);
+      });
+    },
+    [collection.id]
+  );
 
   const [creditImage, setCreditImage] = useState<ArrayBuffer>();
 
@@ -84,7 +89,7 @@ export default function Page({ collection, submission }: Props) {
             <SubmissionCredit onChange={setCreditImage} />
             ※あとから変更可能です
             <FillButton type="submit" disabled={!creditImage}>
-              {submission ? "更新" : "出展登録"}
+              {currentSubmission ? "更新" : "出展登録"}
             </FillButton>
             <span className="text-center text-xs">
               This site is protected by reCAPTCHA and the Google
