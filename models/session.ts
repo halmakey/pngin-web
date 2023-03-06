@@ -14,10 +14,11 @@ import client, {
 } from "./client";
 import { UserID } from "./user";
 
+export const type = "session" as const;
 export type SessionID = `session-${string}`;
 
 export interface Session {
-  type: "session";
+  type: typeof type;
   id: SessionID;
   nonce: string;
   createdAt: string;
@@ -41,7 +42,7 @@ export async function createSession(
 ): Promise<Session> {
   const item = withCreatedUpdatedAt({
     ...input,
-    type: "session" as const,
+    type,
   });
   await client.send(
     new PutItemCommand({

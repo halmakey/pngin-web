@@ -7,10 +7,11 @@ import {
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import client, { InputSource, TableName, withCreatedUpdatedAt } from "./client";
 
+export const type = "user" as const;
 export type UserID = `user-${string}`;
 
 export interface User {
-  type: "user";
+  type: typeof type;
   id: UserID;
   name: string;
   avatarUrl: string;
@@ -35,7 +36,7 @@ export async function getUser(id: UserID): Promise<User | undefined> {
 export async function createUser(input: InputSource<User>): Promise<User> {
   const item = withCreatedUpdatedAt({
     ...input,
-    type: "user" as const,
+    type,
   });
   await client.send(
     new PutItemCommand({

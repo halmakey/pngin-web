@@ -11,10 +11,12 @@ import client, {
   withCreatedUpdatedAt,
 } from "./client";
 
+export const type = "collection" as const;
+
 export type CollectionID = `collection-${string}`;
 
 export interface Collection {
-  type: "collection";
+  type: typeof type;
   id: CollectionID;
   name: string;
   sequence: number;
@@ -35,7 +37,7 @@ export async function listAllCollection(): Promise<Collection[]> {
       IndexName: ByTypeIndexName,
       KeyConditions: {
         type: {
-          AttributeValueList: [{ S: "collection" }],
+          AttributeValueList: [{ S: type }],
           ComparisonOperator: "EQ",
         },
       },
@@ -63,7 +65,7 @@ export async function createCollection(
 ): Promise<Collection> {
   const item = withCreatedUpdatedAt({
     ...input,
-    type: "collection" as const,
+    type,
   });
   await client.send(
     new PutItemCommand({
