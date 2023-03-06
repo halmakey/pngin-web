@@ -3,6 +3,7 @@ import AuthContext from "@/contexts/auth-context";
 import Popup from "@/layouts/Popup";
 import Link from "next/link";
 import { useCallback, useContext, useMemo, useState } from "react";
+import Logo from "./assets/Logo";
 import Avatar from "./Avatar";
 import { BorderButton, InvertBorderButton } from "./buttons";
 
@@ -17,16 +18,16 @@ export default function Header() {
   const { pending, user } = useContext(AuthContext);
 
   return (
-    <header className="text-white bg-gray-800 h-14">
-      <div className="container mx-auto h-full px-4 flex flex-row items-center">
+    <header className="h-14 bg-gray-800 text-white">
+      <div className="container mx-auto flex h-full flex-row items-center px-4">
         <div className="w-full">
           <Link href="/" className="text-4xl ">
-            {SITE_TITLE}
+            <Logo />
           </Link>
         </div>
-        <div className="px-8 flex flex-row items-center">
+        <div className="flex flex-row items-center px-8">
           {pending ? null : user ? (
-            <div className="flex flex-row items-center gap-4 animate-fade-in-fwd">
+            <div className="flex animate-fade-in-fwd flex-row items-center gap-4">
               {user.name}
               <Avatar
                 src={user.avatarUrl}
@@ -44,7 +45,7 @@ export default function Header() {
         </div>
       </div>
       <Popup show={popup !== "none"} onDismiss={hidePopup}>
-        <div className="w-72 h-72 p-4">
+        <div className="h-72 w-72 p-4">
           <div className="flex items-center">
             <Link href="/api/auth/signout" prefetch={false} onClick={hidePopup}>
               <InvertBorderButton>ログアウト</InvertBorderButton>
