@@ -14,7 +14,7 @@ async function signin(req: NextApiRequest, res: NextApiResponse) {
   const id = `session-${nanoid()}` as const;
   const nonce = generateRandomHex(32);
   const now = Date.now();
-  const callback = validateString(req.query.callback)
+  const callback = validateString(req.query.callback);
 
   const session = await Session.createSession({
     id,

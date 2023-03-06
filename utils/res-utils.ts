@@ -11,7 +11,7 @@ export function resRedirect(url: string, status: number = 302) {
   return new Response(undefined, {
     status,
     headers: {
-      "location": url,
+      location: url,
     },
   });
 }

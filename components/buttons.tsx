@@ -17,18 +17,18 @@ export function FillButton(props: Props) {
       type="button"
       {...props}
       className={`
-        transition
         border
         border-gray-800
-        px-4 py-2
-        bg-gray-800
+        bg-gray-800 px-4
+        py-2
         text-white
-        hover:bg-gray-600
+        transition
         hover:border-gray-600
-        active:bg-gray-400
+        hover:bg-gray-600
         active:border-gray-400
-        disabled:bg-gray-400
+        active:bg-gray-400
         disabled:border-gray-400
+        disabled:bg-gray-400
         `}
     />
   );
@@ -39,7 +39,15 @@ export function BorderButton(props: Props) {
     <button
       type="button"
       {...props}
-      className="transition border border-gray-800 px-4 py-2 hover:bg-gray-800 hover:text-white active:bg-gray-600 active:border-gray-600"
+      className={`
+        border
+        border-gray-800
+        px-4 py-2
+        transition
+        hover:bg-gray-800
+        hover:text-white
+        active:border-gray-600
+        active:bg-gray-600`}
     />
   );
 }
@@ -49,7 +57,17 @@ export function InvertBorderButton(props: Props) {
     <button
       type="button"
       {...props}
-      className="transition border border-white px-4 py-2 hover:bg-white hover:text-gray-800 active:bg-gray-400 active:border-gray-400 disabled:bg-gray-400"
+      className={`
+        border
+        border-white
+        px-4
+        py-2
+        transition
+        hover:bg-white
+        hover:text-gray-800
+        active:border-gray-400
+        active:bg-gray-400
+        disabled:bg-gray-400`}
     />
   );
 }

@@ -19,9 +19,9 @@ export default function Page({ collection }: Props) {
       <Header />
       <Main>
         <div className="flex flex-col gap-4">
-        {collection.map((c) => (
-          <CollectionCard key={c.id} collection={c} />
-        ))}
+          {collection.map((c) => (
+            <CollectionCard key={c.id} collection={c} />
+          ))}
         </div>
       </Main>
     </>

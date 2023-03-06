@@ -31,7 +31,7 @@ const Popup: FC<PopupProps> = ({ children, show, onDismiss }) => {
 
   return (
     <div
-      className="absolute w-screen h-screen left-0 top-0 z-10 transition"
+      className="absolute left-0 top-0 z-10 h-screen w-screen transition"
       style={{
         opacity: currentShow ? 1 : 0,
         pointerEvents: currentShow ? "auto" : "none",
@@ -39,7 +39,7 @@ const Popup: FC<PopupProps> = ({ children, show, onDismiss }) => {
       onClick={handleClose}
     >
       <div
-        className="absolute w-auto h-auto rounded top-16 right-4 bg-gray-700"
+        className="absolute top-16 right-4 h-auto w-auto rounded bg-gray-700"
         onClick={stopPropagation}
       >
         {children}

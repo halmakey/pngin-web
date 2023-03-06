@@ -26,9 +26,7 @@ export function getSignInUrl(state: string): string {
   )}&prompt=consent`;
 }
 
-export async function authorizeCodeGrant(
-  code: string
-): Promise<{
+export async function authorizeCodeGrant(code: string): Promise<{
   access_token: string;
   expires_in: number;
   refresh_token: string;

@@ -37,7 +37,9 @@ test("verify session token: ok", async () => {
 test("verify session token: ng: invalid alg", async () => {
   const token =
     "eyJ0eXAiOiJub25lIiwiYWxnIjoiSFMyNTYifQo.eyJ1c2VyIjp7ImlkIjoidGVzdC11c2VyLWlkIiwidXNlcm5hbWUiOiJ0ZXN0LXVzZXItbmFtZSIsImRpc2NyaW1pbmF0b3IiOiIwMTIzIiwiYXZhdGFyVXJsIjoidGVzdC1hdmF0YXItdXJsIn0sImlhdCI6MTY3NDk3NDcxNiwiZXhwIjoxNjc0OTc0Nzc2fQ";
-  await expect(verifySessionToken(token)).rejects.toThrowError("Invalid Compact JWS");
+  await expect(verifySessionToken(token)).rejects.toThrowError(
+    "Invalid Compact JWS"
+  );
 });
 
 test("verify token: ng: expired", async () => {

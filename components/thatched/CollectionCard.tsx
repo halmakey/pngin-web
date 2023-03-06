@@ -11,7 +11,7 @@ export default function CollectionCard({
   };
 }) {
   return (
-    <div className="border border-gray-400 p-4 gap-4 flex flex-col items-start">
+    <div className="flex flex-col items-start gap-4 border border-gray-400 p-4">
       {collection.name}
       <Link href={`/submission/${collection.id}`}>
         <BorderButton>応募</BorderButton>
