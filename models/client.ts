@@ -11,10 +11,20 @@ const client = new DynamoDBClient({
 export const TableName = "pngin-web";
 export const ByTypeIndexName = "byType";
 
-export type InputSource<T> = Omit<T, "type" | "createdAt" | "updatedAt">
+export type InputSource<T> = Omit<T, "type" | "createdAt" | "updatedAt">;
 
 export function nowISOString(): string {
   return new Date().toISOString();
+}
+
+export function withCreatedAt<T>(
+  source: T & { createdAt: never }
+): Omit<T, "createdAt"> & { createdAt: string } {
+  const now = nowISOString();
+  return {
+    ...source,
+    createdAt: now,
+  };
 }
 
 export function withCreatedUpdatedAt<T>(
