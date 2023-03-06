@@ -1,4 +1,4 @@
-import { deleteSession } from "@/models/session";
+import { deleteSession } from "@/models/Session";
 import { verifySessionToken } from "@/utils/token";
 import cookie from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";

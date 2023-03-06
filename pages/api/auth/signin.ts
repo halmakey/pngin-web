@@ -1,5 +1,5 @@
 import { getSignInUrl } from "@/utils/discord";
-import { createSession } from "@/models/session";
+import * as Session from "@/models/Session";
 import { generateRandomHex } from "@/utils/random";
 import { createSessionToken } from "@/utils/token";
 import cookie from "cookie";
@@ -16,7 +16,7 @@ async function signin(req: NextApiRequest, res: NextApiResponse) {
   const now = Date.now();
   const callback = validateString(req.query.callback)
 
-  const session = await createSession({
+  const session = await Session.createSession({
     id,
     nonce,
     ttl: Math.floor(now / 1000) + Age1H,
