@@ -43,6 +43,7 @@ export function BorderButton(props: Props) {
         border
         border-gray-800
         px-4 py-2
+        text-gray-800
         transition
         hover:bg-gray-800
         hover:text-white
@@ -62,6 +63,7 @@ export function InvertBorderButton(props: Props) {
         border-white
         px-4
         py-2
+        text-white
         transition
         hover:bg-white
         hover:text-gray-800
