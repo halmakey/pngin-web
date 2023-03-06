@@ -29,6 +29,7 @@ export function useImageProcessor({ width, height }: Size) {
 
   useAsyncEffect(async () => {
     if (!file) {
+      setResult(undefined);
       return;
     }
     const canvas = document.createElement("canvas");
