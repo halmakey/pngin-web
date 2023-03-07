@@ -1,10 +1,7 @@
 import {
-  faClose,
-  faRefresh,
   faRotateBack,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { DOMAttributes, HTMLProps, ReactNode } from "react";
 
 type Props = React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,

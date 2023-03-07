@@ -1,4 +1,5 @@
 import {
+  DeleteItemCommand,
   GetItemCommand,
   PutItemCommand,
   ReturnValue,
@@ -11,7 +12,9 @@ import client, {
   TableName,
   withCreatedUpdatedAt,
 } from "./client";
+import { CollectionID } from "./Collection";
 import type { ImageID } from "./Image";
+import { UserID } from "./User";
 
 export const type = "submission" as const;
 export type SubmissionID = `submission-${string}-${string}`;
@@ -95,4 +98,23 @@ export async function updateSubmission(input: {
     })
   );
   return unmarshall(result.Attributes!) as Submission;
+}
+
+export async function deleteSubmission({
+  userId,
+  collectionId,
+}: {
+  userId: UserID;
+  collectionId: CollectionID;
+}) {
+  await client
+    .send(
+      new DeleteItemCommand({
+        TableName,
+        Key: { id: { S: createSubmissionID(userId, collectionId) } },
+      })
+    )
+    .catch(() => {
+      /*NOP*/
+    });
 }

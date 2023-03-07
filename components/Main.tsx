@@ -1,9 +1,17 @@
 import { ReactNode } from "react";
 
-export default function Main({ children }: { children: ReactNode }) {
+export default function Main({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
   return (
-    <main className="flex-1 bg-white p-4 text-gray-800">
-      <div className="container mx-auto text-gray-800">{children}</div>
+    <main
+      className={`container flex flex-1 flex-col p-4 text-gray-800 mx-auto ${className}`}
+    >
+      {children}
     </main>
   );
 }

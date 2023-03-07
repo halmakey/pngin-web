@@ -12,7 +12,8 @@ import { BorderButton, FillButton } from "@/components/buttons";
 import { SubmissionCredit } from "@/components/submission/SubmissionCredit";
 import AuthContext from "@/contexts/auth-context";
 import Script from "next/script";
-import { postSubmission } from "@/utils/api-client";
+import * as API from "@/utils/api-client";
+import { ReCaptchaCredit } from "@/components/ReCaptchaCredit";
 
 interface Props {
   collection: Collection;
@@ -20,39 +21,61 @@ interface Props {
 }
 
 export default function Page({ collection, submission }: Props) {
+  const collectionId = collection.id;
   const { user } = useContext(AuthContext);
   const [currentSubmission, setCurrentSubmission] = useState(submission);
 
   const nameRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = useCallback(
-    (e: FormEvent<HTMLFormElement>) => {
+    async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       if (!nameRef.current) {
         return;
       }
 
-      grecaptcha.ready(async () => {
-        const token = await grecaptcha.execute(
-          process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
-          { action: "submit" }
-        );
-        const { submission } = await postSubmission({
-          collectionId: collection.id,
-          token,
-          name: nameRef.current?.value || "",
-          comment: "",
-        });
-        setCurrentSubmission(submission);
+      await new Promise<void>((resolve) => grecaptcha.ready(resolve));
+      const token = await grecaptcha.execute(
+        process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
+        { action: "submit" }
+      );
+      const { submission } = await API.postSubmission({
+        collectionId,
+        token,
+        name: nameRef.current?.value || "",
+        comment: "",
       });
+      setCurrentSubmission(submission);
     },
-    [collection.id]
+    [collectionId]
   );
 
   const [creditImage, setCreditImage] = useState<ArrayBuffer>();
 
   const [isOpenSubmission, setOpenSubmission] = useState(!!submission);
   const openSubmission = useCallback(() => setOpenSubmission(true), []);
+  const cancelSubmission = useCallback(async () => {
+    if (currentSubmission) {
+      if (!confirm("出展を取り消します。よろしいですか？")) {
+        return;
+      }
+
+      await new Promise<void>((resolve) => grecaptcha.ready(resolve));
+      const token = await grecaptcha.execute(
+        process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
+        { action: "delete" }
+      );
+      await API.deleteSubmission({
+        collectionId,
+        token,
+      });
+      setCurrentSubmission(null);
+      setOpenSubmission(false);
+      return;
+    }
+    grecaptcha.ready(async () => {});
+    setOpenSubmission(false);
+  }, [collectionId, currentSubmission]);
 
   return (
     <>
@@ -87,24 +110,20 @@ export default function Page({ collection, submission }: Props) {
             />
             <label htmlFor="credit">クレジット画像: </label>
             <SubmissionCredit onChange={setCreditImage} />
-            ※あとから変更可能です
-            <FillButton type="submit" disabled={!creditImage}>
-              {currentSubmission ? "更新" : "出展登録"}
-            </FillButton>
-            <span className="text-center text-xs">
-              This site is protected by reCAPTCHA and the Google
-              <br />
-              <a href="https://policies.google.com/privacy">
-                Privacy Policy
-              </a>{" "}
-              and
-              <a href="https://policies.google.com/terms">
-                Terms of Service
-              </a>{" "}
-              apply.
-            </span>
+            ※あとから変更できます
+            <div className="flex flex-row gap-2">
+              <BorderButton onClick={cancelSubmission}>
+                {currentSubmission ? "削除" : "キャンセル"}
+              </BorderButton>
+              <FillButton type="submit" disabled={!creditImage}>
+                {currentSubmission ? "更新" : "出展登録"}
+              </FillButton>
+            </div>
           </form>
         )}
+        <div className="flex-1 flex flex-col justify-end">
+          <ReCaptchaCredit />
+        </div>
       </Main>
     </>
   );
