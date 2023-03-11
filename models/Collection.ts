@@ -10,7 +10,6 @@ import {
   ByTypeIndexName,
   InputSource,
   TableName,
-  withCreatedUpdatedAt,
 } from "./client";
 
 export const type = "collection" as const;
@@ -22,8 +21,7 @@ export interface Collection {
   id: string;
   name: string;
   sequence: number;
-  createdAt: string;
-  updatedAt: string;
+  timestamp: number;
   startCallAt?: string;
   endCallAt?: string;
 }
@@ -66,12 +64,13 @@ export async function createCollection(
   input: InputSource<Collection>
 ): Promise<Collection> {
   const id = nanoid(7)
-  const item = withCreatedUpdatedAt({
+  const item: Collection = {
     ...input,
     pkey: getPKey(id),
     id,
     type,
-  });
+    timestamp: Date.now(),
+  };
   await getClient().send(
     new PutItemCommand({
       TableName,

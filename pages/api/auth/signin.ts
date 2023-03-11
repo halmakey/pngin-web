@@ -3,7 +3,6 @@ import * as Session from "@/models/Session";
 import { generateRandomHex } from "@/utils/random";
 import { createSessionToken } from "@/utils/token";
 import cookie from "cookie";
-import { nanoid } from "nanoid";
 import { NextApiRequest, NextApiResponse } from "next";
 import { validateString } from "@/utils/validate";
 

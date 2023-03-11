@@ -9,9 +9,7 @@ import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import {
   getClient,
   InputSource,
-  nowISOString,
   TableName,
-  withCreatedUpdatedAt,
 } from "./client";
 
 export const type = "author" as const;
@@ -22,9 +20,8 @@ export interface Author {
   pkey: PKey;
   type: typeof type;
   id: AuthorID;
-  createdAt: string;
-  updatedAt: string;
   name: string;
+  timestamp: number;
   comment: string;
   imageId?: string;
 }
@@ -54,59 +51,26 @@ export async function getAuthor(
   return result.Item && (unmarshall(result.Item) as Author);
 }
 
-export async function createAuthor(
+export async function putAuthor(
   collectionId: string,
   userId: string,
   input: InputSource<Author>
 ): Promise<Author> {
   const id = getAuthorID(userId, collectionId);
-  const author = withCreatedUpdatedAt({
+  const author: Author = {
     ...input,
     pkey: `author:${id}` as const,
     id,
     type,
-  });
+    timestamp: Date.now(),
+  };
   await getClient().send(
     new PutItemCommand({
       TableName,
       Item: marshall(author),
-      ConditionExpression: "attribute_not_exists(id)",
     })
   );
   return author;
-}
-
-export async function updateAuthor(
-  collectionId: string,
-  userId: string,
-  input: {
-    name: string;
-    comment: string;
-    file?: string;
-  }
-): Promise<Author> {
-  const result = await getClient().send(
-    new UpdateItemCommand({
-      TableName,
-      Key: { pkey: { S: getPKey(collectionId, userId) } },
-      AttributeUpdates: {
-        name: {
-          Value: { S: input.name },
-        },
-        comment: {
-          Value: { S: input.comment },
-        },
-        file: {
-          Value: input.file ? { S: input.file } : { NULL: false },
-        },
-        updatedAt: {
-          Value: { S: nowISOString() },
-        },
-      },
-      ReturnValues: ReturnValue.ALL_NEW,
-    })
-  );
-  return unmarshall(result.Attributes!) as Author;
 }
 
 export async function deleteAuthor(collectionId: string, userId: string) {

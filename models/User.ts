@@ -9,7 +9,6 @@ import {
   getClient,
   InputSource,
   TableName,
-  withCreatedUpdatedAt,
 } from "./client";
 
 export const type = "user" as const;
@@ -19,11 +18,10 @@ export type PKey = `user:${UserID}`;
 export interface User {
   pkey: PKey;
   type: typeof type;
+  timestamp: number;
   id: string;
   name: string;
   avatarUrl: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 function getPKey(userId: UserID): PKey {
@@ -52,11 +50,12 @@ export async function createUser(
   id: UserID,
   input: InputSource<User>
 ): Promise<User> {
-  const item = withCreatedUpdatedAt({
+  const item: User = ({
     ...input,
     pkey: getPKey(id),
     id,
     type,
+    timestamp: Date.now(),
   });
   await getClient().send(
     new PutItemCommand({
@@ -75,7 +74,6 @@ export async function updateUser(
     avatarUrl: string;
   }
 ): Promise<User> {
-  const now = new Date().toISOString();
   const result = await getClient().send(
     new UpdateItemCommand({
       TableName,
@@ -87,8 +85,8 @@ export async function updateUser(
         avatarUrl: {
           Value: { S: input.avatarUrl },
         },
-        updatedAt: {
-          Value: { S: now },
+        timestamp: {
+          Value: { N: Date.now().toString() },
         },
       },
       ReturnValues: ReturnValue.ALL_NEW,

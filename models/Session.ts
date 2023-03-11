@@ -7,13 +7,7 @@ import {
 } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { nanoid } from "nanoid";
-import {
-  getClient,
-  InputSource,
-  nowISOString,
-  TableName,
-  withCreatedUpdatedAt,
-} from "./client";
+import { getClient, InputSource, TableName } from "./client";
 
 export const type = "session" as const;
 export type PKey = `session:${string}`;
@@ -23,10 +17,9 @@ export interface Session {
   type: typeof type;
   id: string;
   nonce: string;
-  createdAt: string;
-  updatedAt: string;
   userId?: string;
   ttl: number;
+  timestamp: number;
 }
 
 function getPKey(sessionId: string): PKey {
@@ -48,14 +41,15 @@ export async function getSession(
 export async function createSession(
   input: InputSource<Session>
 ): Promise<Session> {
-  const id = nanoid()
+  const id = nanoid();
   const pkey = getPKey(id);
-  const item = withCreatedUpdatedAt({
+  const item: Session = {
     ...input,
     pkey,
     id,
     type,
-  });
+    timestamp: Date.now(),
+  };
   await getClient().send(
     new PutItemCommand({
       TableName,
@@ -75,8 +69,8 @@ export async function updateSession(input: {
       TableName,
       Key: { pkey: { S: getPKey(input.id) } },
       AttributeUpdates: {
-        updatedAt: { Value: { S: nowISOString() } },
         userId: { Value: { S: input.userId } },
+        timestamp: { Value: { N: Date.now().toString() } },
       },
       ReturnValues: ReturnValue.ALL_NEW,
     })

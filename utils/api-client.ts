@@ -32,6 +32,9 @@ const client = {
   post<Q = object, R = object>(url: string, body: Q): Promise<R> {
     return request("POST", url, body);
   },
+  put<Q = object, R = object>(url: string, body: Q): Promise<R> {
+    return request("PUT", url, body);
+  },
   delete<Q = object, R = object>(url: string, body: Q): Promise<R> {
     return request("DELETE", url, body);
   }
@@ -41,8 +44,8 @@ export function apiGetMe() {
   return client.get<UserPayload>("/api/user");
 }
 
-export async function postAuthor(body: API.PostAuthorRequestBody) {
-  return client.post<API.PostAuthorRequestBody, API.PostAuthorResponseBody>(
+export async function putAuthor(body: API.PutAuthorRequestBody) {
+  return client.put<API.PutAuthorRequestBody, API.PutAuthorResponseBody>(
     "/api/author",
     body
   );

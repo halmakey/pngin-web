@@ -14,12 +14,10 @@ checkAllEnvs();
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     switch (req.method) {
-      case "POST":
-        return await postAuthor(req, res);
+      case "PUT":
+        return await putAuthor(req, res);
       case "DELETE":
         return await deleteAuthor(req, res);
-    }
-    if (req.method === "POST") {
     }
     return res.status(405).json({});
   } catch (err) {
@@ -28,10 +26,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-async function postAuthor(
+async function putAuthor(
   req: NextApiRequest,
   res: NextApiResponse<
-    API.PostAuthorResponseBody | { [key: string]: never }
+    API.PutAuthorResponseBody | { [key: string]: never }
   >
 ) {
   const collectionId = validateNanoID(req.body?.collectionId);
@@ -75,7 +73,7 @@ async function postAuthor(
     return res.status(403).json({});
   }
 
-  const author = await Author.createAuthor(collection.id, user.id, {
+  const author = await Author.putAuthor(collection.id, user.id, {
     name,
     comment,
   });

@@ -40,7 +40,7 @@ export default function Page({ collection, author }: Props) {
         process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
         { action: "submit" }
       );
-      const { author } = await API.postAuthor({
+      const { author } = await API.putAuthor({
         collectionId,
         token,
         name: nameRef.current?.value || "",
