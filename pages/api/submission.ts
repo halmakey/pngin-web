@@ -5,7 +5,7 @@ import * as Collection from "@/models/Collection";
 import * as Submission from "@/models/Submission";
 import * as User from "@/models/User";
 import { verifyRecaptchaToken } from "@/utils/verify-recaptcha";
-import { validateString } from "@/utils/validate";
+import { validateNanoID, validateString } from "@/utils/validate";
 import { API } from "@/types/api";
 import { getRemoteIp } from "@/utils/remoteip";
 
@@ -34,14 +34,14 @@ async function postSubmission(
     API.PostSubmissionResponseBody | { [key: string]: never }
   >
 ) {
-  const collectionId = validateString(req.body?.collectionId);
+  const collectionId = validateNanoID(req.body?.collectionId);
   const response = validateString(req.body?.token);
   const name = validateString(req.body?.name, 1, 64);
   const comment = validateString(req.body?.comment, 0, 512);
   const remoteip = getRemoteIp(req);
 
   if (
-    !Collection.isCollectionId(collectionId) ||
+    !collectionId ||
     !response ||
     !remoteip ||
     !name ||
@@ -52,7 +52,10 @@ async function postSubmission(
 
   const { token } = req.cookies;
   const payload = token && (await verifyUserToken(token));
-  const user = payload && (await User.getUser(payload.user.id));
+  const user =
+    payload &&
+    User.isUserID(payload.user.id) &&
+    (await User.getUser(payload.user.id));
   if (!user) {
     return res.status(401).json({});
   }
@@ -72,8 +75,7 @@ async function postSubmission(
     return res.status(403).json({});
   }
 
-  const submission = await Submission.createSubmission({
-    id: Submission.createSubmissionID(user.id, collectionId),
+  const submission = await Submission.createSubmission(user.id, collection.id, {
     name,
     comment,
   });
@@ -85,12 +87,11 @@ async function deleteSubmission(
   req: NextApiRequest,
   res: NextApiResponse<{ [key: string]: never }>
 ) {
-  const collectionId = validateString(req.body?.collectionId);
+  const collectionId = validateNanoID(req.body?.collectionId);
   const response = validateString(req.body?.token);
   const remoteip = getRemoteIp(req);
   const collection =
-    Collection.isCollectionId(collectionId) &&
-    (await Collection.getCollection(collectionId));
+    collectionId && (await Collection.getCollection(collectionId));
   if (!collection || !response || !remoteip) {
     console.log({ collection, response, remoteip });
     return res.status(400).json({});
@@ -98,7 +99,10 @@ async function deleteSubmission(
 
   const { token } = req.cookies;
   const payload = token && (await verifyUserToken(token));
-  const user = payload && (await User.getUser(payload.user.id));
+  const user =
+    payload &&
+    User.isUserID(payload.user.id) &&
+    (await User.getUser(payload.user.id));
   if (!user) {
     return res.status(401).json({});
   }

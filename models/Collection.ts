@@ -4,7 +4,9 @@ import {
   QueryCommand,
 } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
-import client, {
+import { nanoid } from "nanoid";
+import {
+  getClient,
   ByTypeIndexName,
   InputSource,
   TableName,
@@ -12,12 +14,12 @@ import client, {
 } from "./client";
 
 export const type = "collection" as const;
-
-export type CollectionID = `collection-${string}`;
+export type PKey = `collection:${string}`;
 
 export interface Collection {
+  pkey: PKey;
   type: typeof type;
-  id: CollectionID;
+  id: string;
   name: string;
   sequence: number;
   createdAt: string;
@@ -26,12 +28,12 @@ export interface Collection {
   endCallAt?: string;
 }
 
-export function isCollectionId(id: unknown): id is CollectionID {
-  return typeof id === "string" && id.startsWith("collection-");
+function getPKey(collectionId: string): PKey {
+  return `collection:${collectionId}`;
 }
 
 export async function listAllCollection(): Promise<Collection[]> {
-  const result = await client.send(
+  const result = await getClient().send(
     new QueryCommand({
       TableName,
       IndexName: ByTypeIndexName,
@@ -49,12 +51,12 @@ export async function listAllCollection(): Promise<Collection[]> {
 }
 
 export async function getCollection(
-  id: CollectionID
+  id: string
 ): Promise<Collection | undefined> {
-  const result = await client.send(
+  const result = await getClient().send(
     new GetItemCommand({
       TableName,
-      Key: marshall({ id }),
+      Key: marshall({ pkey: getPKey(id) }),
     })
   );
   return result.Item && (unmarshall(result.Item) as Collection);
@@ -63,11 +65,14 @@ export async function getCollection(
 export async function createCollection(
   input: InputSource<Collection>
 ): Promise<Collection> {
+  const id = nanoid(7)
   const item = withCreatedUpdatedAt({
     ...input,
+    pkey: getPKey(id),
+    id,
     type,
   });
-  await client.send(
+  await getClient().send(
     new PutItemCommand({
       TableName,
       Item: marshall(item),

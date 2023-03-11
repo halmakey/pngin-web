@@ -5,27 +5,42 @@ import {
   UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
-import client, { InputSource, TableName, withCreatedUpdatedAt } from "./client";
+import {
+  getClient,
+  InputSource,
+  TableName,
+  withCreatedUpdatedAt,
+} from "./client";
 
 export const type = "user" as const;
-export type UserID = `user-${string}`;
+export type UserID = `discord-${string}`;
+export type PKey = `user:${UserID}`;
 
 export interface User {
+  pkey: PKey;
   type: typeof type;
-  id: UserID;
+  id: string;
   name: string;
   avatarUrl: string;
   createdAt: string;
   updatedAt: string;
 }
 
+function getPKey(userId: UserID): PKey {
+  return `user:${userId}`;
+}
+
+export function isUserID(userId: unknown): userId is UserID {
+  return typeof userId === "string" && userId.startsWith("discord-");
+}
+
 export async function getUser(id: UserID): Promise<User | undefined> {
-  const result = await client.send(
+  const result = await getClient().send(
     new GetItemCommand({
       TableName,
       Key: {
-        id: {
-          S: id,
+        pkey: {
+          S: getPKey(id),
         },
       },
     })
@@ -33,12 +48,17 @@ export async function getUser(id: UserID): Promise<User | undefined> {
   return result.Item && (unmarshall(result.Item) as User);
 }
 
-export async function createUser(input: InputSource<User>): Promise<User> {
+export async function createUser(
+  id: UserID,
+  input: InputSource<User>
+): Promise<User> {
   const item = withCreatedUpdatedAt({
     ...input,
+    pkey: getPKey(id),
+    id,
     type,
   });
-  await client.send(
+  await getClient().send(
     new PutItemCommand({
       TableName,
       Item: marshall(item),
@@ -48,16 +68,18 @@ export async function createUser(input: InputSource<User>): Promise<User> {
   return item;
 }
 
-export async function updateUser(input: {
-  id: UserID;
-  name: string;
-  avatarUrl: string;
-}): Promise<User> {
+export async function updateUser(
+  id: UserID,
+  input: {
+    name: string;
+    avatarUrl: string;
+  }
+): Promise<User> {
   const now = new Date().toISOString();
-  const result = await client.send(
+  const result = await getClient().send(
     new UpdateItemCommand({
       TableName,
-      Key: { id: { S: input.id } },
+      Key: { pkey: { S: getPKey(id) } },
       AttributeUpdates: {
         name: {
           Value: { S: input.name },

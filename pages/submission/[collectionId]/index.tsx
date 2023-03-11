@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import Main from "@/components/Main";
 import { SITE_TITLE } from "@/constants/values";
-import { getCollection, isCollectionId } from "@/models/Collection";
+import { getCollection } from "@/models/Collection";
 import { getSubmission, Submission } from "@/models/Submission";
 import { verifyUserToken } from "@/utils/token";
 import { GetServerSideProps } from "next";
@@ -14,6 +14,7 @@ import AuthContext from "@/contexts/auth-context";
 import Script from "next/script";
 import * as API from "@/utils/api-client";
 import { ReCaptchaCredit } from "@/components/ReCaptchaCredit";
+import { validateNanoID, validateString } from "@/utils/validate";
 
 interface Props {
   collection: Collection;
@@ -136,9 +137,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
   const token = req.cookies.token;
   const payload = token && (await verifyUserToken(token));
   const userId = payload && payload.user.id;
-  const collectionId = params?.collectionId;
+  const collectionId = validateNanoID(params?.collectionId);
 
-  if (!isCollectionId(collectionId)) {
+  if (!collectionId) {
     return {
       notFound: true,
     };

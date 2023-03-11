@@ -7,3 +7,7 @@ export function validateString(
     ? value
     : undefined;
 }
+
+export function validateNanoID(value: unknown): string | undefined {
+  return validateString(value, 4, 40);
+}

@@ -6,32 +6,40 @@ import {
   UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
-import client, {
+import { nanoid } from "nanoid";
+import {
+  getClient,
   InputSource,
   nowISOString,
   TableName,
   withCreatedUpdatedAt,
 } from "./client";
-import type { UserID } from "./User";
 
 export const type = "session" as const;
-export type SessionID = `session-${string}`;
+export type PKey = `session:${string}`;
 
 export interface Session {
+  pkey: PKey;
   type: typeof type;
-  id: SessionID;
+  id: string;
   nonce: string;
   createdAt: string;
   updatedAt: string;
-  userId?: UserID;
+  userId?: string;
   ttl: number;
 }
 
-export async function getSession(id: SessionID): Promise<Session | undefined> {
-  const result = await client.send(
+function getPKey(sessionId: string): PKey {
+  return `session:${sessionId}`;
+}
+
+export async function getSession(
+  sessionId: string
+): Promise<Session | undefined> {
+  const result = await getClient().send(
     new GetItemCommand({
       TableName,
-      Key: marshall({ id }),
+      Key: marshall({ pkey: getPKey(sessionId) }),
     })
   );
   return result.Item && (unmarshall(result.Item) as Session);
@@ -40,11 +48,15 @@ export async function getSession(id: SessionID): Promise<Session | undefined> {
 export async function createSession(
   input: InputSource<Session>
 ): Promise<Session> {
+  const id = nanoid()
+  const pkey = getPKey(id);
   const item = withCreatedUpdatedAt({
     ...input,
+    pkey,
+    id,
     type,
   });
-  await client.send(
+  await getClient().send(
     new PutItemCommand({
       TableName,
       Item: marshall(item),
@@ -55,13 +67,13 @@ export async function createSession(
 }
 
 export async function updateSession(input: {
-  id: SessionID;
-  userId: UserID;
+  id: string;
+  userId: string;
 }): Promise<Session> {
-  const result = await client.send(
+  const result = await getClient().send(
     new UpdateItemCommand({
       TableName,
-      Key: { id: { S: input.id } },
+      Key: { pkey: { S: getPKey(input.id) } },
       AttributeUpdates: {
         updatedAt: { Value: { S: nowISOString() } },
         userId: { Value: { S: input.userId } },
@@ -72,11 +84,11 @@ export async function updateSession(input: {
   return unmarshall(result.Attributes!) as Session;
 }
 
-export async function deleteSession(id: SessionID): Promise<void> {
-  await client.send(
+export async function deleteSession(id: string): Promise<void> {
+  await getClient().send(
     new DeleteItemCommand({
       TableName,
-      Key: marshall({ id }),
+      Key: marshall({ pkey: getPKey(id) }),
     })
   );
 }

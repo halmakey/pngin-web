@@ -50,17 +50,15 @@ async function callback(req: NextApiRequest, res: NextApiResponse) {
     const userAvatarUrl =
       (me.avatar && getAvatarUrl(me.id, me.avatar)) || "/anonymous.svg";
 
-    const userId = `user-${me.id}` as const;
+    const userId = `discord-${me.id}` as const;
     let user = await getUser(userId);
     if (!user) {
-      user = await createUser({
-        id: userId,
+      user = await createUser(userId, {
         name: userName,
         avatarUrl: userAvatarUrl,
       });
     } else {
-      user = await updateUser({
-        id: userId,
+      user = await updateUser(userId, {
         name: userName,
         avatarUrl: userAvatarUrl,
       });

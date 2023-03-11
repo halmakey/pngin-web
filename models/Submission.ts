@@ -6,46 +6,50 @@ import {
   UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
-import client, {
+import {
+  getClient,
   InputSource,
   nowISOString,
   TableName,
   withCreatedUpdatedAt,
 } from "./client";
-import { CollectionID } from "./Collection";
-import type { ImageID } from "./Image";
-import { UserID } from "./User";
 
 export const type = "submission" as const;
-export type SubmissionID = `submission-${string}-${string}`;
-
-export function createSubmissionID(
-  userId: string,
-  collectionId: string
-): SubmissionID {
-  return `submission-${userId}-${collectionId}`;
-}
+export type SubmissionID = `${string}:${string}`;
+export type PKey = `submission:${SubmissionID}`;
 
 export interface Submission {
+  pkey: PKey;
   type: typeof type;
   id: SubmissionID;
   createdAt: string;
   updatedAt: string;
   name: string;
   comment: string;
-  imageId?: ImageID;
+  imageId?: string;
+}
+
+function getPKey(userId: string, collectionId: string): PKey {
+  return `submission:${getSubmissionID(userId, collectionId)}`;
+}
+
+export function getSubmissionID(
+  userId: string,
+  collectionId: string
+): SubmissionID {
+  return `${collectionId}:${userId}`;
 }
 
 export async function getSubmission(
   userId: string,
   collectionId: string
 ): Promise<Submission | undefined> {
-  const result = await client.send(
+  const result = await getClient().send(
     new GetItemCommand({
       TableName,
       Key: {
-        id: {
-          S: createSubmissionID(userId, collectionId),
+        pkey: {
+          S: getPKey(userId, collectionId),
         },
       },
     })
@@ -54,13 +58,18 @@ export async function getSubmission(
 }
 
 export async function createSubmission(
+  userId: string,
+  collectionId: string,
   input: InputSource<Submission>
 ): Promise<Submission> {
+  const id = getSubmissionID(userId, collectionId);
   const submission = withCreatedUpdatedAt({
     ...input,
+    pkey: `submission:${id}` as const,
+    id,
     type,
   });
-  await client.send(
+  await getClient().send(
     new PutItemCommand({
       TableName,
       Item: marshall(submission),
@@ -70,16 +79,19 @@ export async function createSubmission(
   return submission;
 }
 
-export async function updateSubmission(input: {
-  id: SubmissionID;
-  name: string;
-  comment: string;
-  file?: string;
-}): Promise<Submission> {
-  const result = await client.send(
+export async function updateSubmission(
+  userId: string,
+  collectionId: string,
+  input: {
+    name: string;
+    comment: string;
+    file?: string;
+  }
+): Promise<Submission> {
+  const result = await getClient().send(
     new UpdateItemCommand({
       TableName,
-      Key: { id: { S: input.id } },
+      Key: { pkey: { S: getPKey(userId, collectionId) } },
       AttributeUpdates: {
         name: {
           Value: { S: input.name },
@@ -104,14 +116,14 @@ export async function deleteSubmission({
   userId,
   collectionId,
 }: {
-  userId: UserID;
-  collectionId: CollectionID;
+  userId: string;
+  collectionId: string;
 }) {
-  await client
+  await getClient()
     .send(
       new DeleteItemCommand({
         TableName,
-        Key: { id: { S: createSubmissionID(userId, collectionId) } },
+        Key: { pkey: { S: getPKey(userId, collectionId) } },
       })
     )
     .catch(() => {
