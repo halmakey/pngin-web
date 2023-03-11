@@ -41,16 +41,16 @@ export function apiGetMe() {
   return client.get<UserPayload>("/api/user");
 }
 
-export async function postSubmission(body: API.PostSubmissionRequestBody) {
-  return client.post<API.PostSubmissionRequestBody, API.PostSubmissionResponseBody>(
-    "/api/submission",
+export async function postAuthor(body: API.PostAuthorRequestBody) {
+  return client.post<API.PostAuthorRequestBody, API.PostAuthorResponseBody>(
+    "/api/author",
     body
   );
 }
 
-export async function deleteSubmission(body: API.DeleteSubmissionRequestBody) {
-  return client.delete<API.DeleteSubmissionRequestBody, API.NoBody>(
-    "/api/submission",
+export async function deleteAuthor(body: API.DeleteAuthorRequestBody) {
+  return client.delete<API.DeleteAuthorRequestBody, API.NoBody>(
+    "/api/author",
     body
   );
 }

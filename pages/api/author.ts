@@ -2,7 +2,7 @@ import { checkAllEnvs } from "@/utils/check-env";
 import { verifyUserToken } from "@/utils/token";
 import { NextApiRequest, NextApiResponse } from "next";
 import * as Collection from "@/models/Collection";
-import * as Submission from "@/models/Submission";
+import * as Author from "@/models/Author";
 import * as User from "@/models/User";
 import { verifyRecaptchaToken } from "@/utils/verify-recaptcha";
 import { validateNanoID, validateString } from "@/utils/validate";
@@ -15,9 +15,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     switch (req.method) {
       case "POST":
-        return await postSubmission(req, res);
+        return await postAuthor(req, res);
       case "DELETE":
-        return await deleteSubmission(req, res);
+        return await deleteAuthor(req, res);
     }
     if (req.method === "POST") {
     }
@@ -28,10 +28,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-async function postSubmission(
+async function postAuthor(
   req: NextApiRequest,
   res: NextApiResponse<
-    API.PostSubmissionResponseBody | { [key: string]: never }
+    API.PostAuthorResponseBody | { [key: string]: never }
   >
 ) {
   const collectionId = validateNanoID(req.body?.collectionId);
@@ -75,15 +75,15 @@ async function postSubmission(
     return res.status(403).json({});
   }
 
-  const submission = await Submission.createSubmission(user.id, collection.id, {
+  const author = await Author.createAuthor(collection.id, user.id, {
     name,
     comment,
   });
 
-  return res.json({ submission });
+  return res.json({ author });
 }
 
-async function deleteSubmission(
+async function deleteAuthor(
   req: NextApiRequest,
   res: NextApiResponse<{ [key: string]: never }>
 ) {
@@ -119,10 +119,7 @@ async function deleteSubmission(
 
   // TODO: delete all images
 
-  await Submission.deleteSubmission({
-    userId: user.id,
-    collectionId: collection.id,
-  });
+  await Author.deleteAuthor(collection.id, user.id);
   res.json({});
 }
 

@@ -2,7 +2,7 @@ import Header from "@/components/Header";
 import Main from "@/components/Main";
 import { SITE_TITLE } from "@/constants/values";
 import { getCollection } from "@/models/Collection";
-import { getSubmission, Submission } from "@/models/Submission";
+import * as Author from "@/models/Author";
 import { verifyUserToken } from "@/utils/token";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
@@ -18,13 +18,13 @@ import { validateNanoID, validateString } from "@/utils/validate";
 
 interface Props {
   collection: Collection;
-  submission: Submission | null;
+  author: Author.Author | null;
 }
 
-export default function Page({ collection, submission }: Props) {
+export default function Page({ collection, author }: Props) {
   const collectionId = collection.id;
   const { user } = useContext(AuthContext);
-  const [currentSubmission, setCurrentSubmission] = useState(submission);
+  const [currentAuthor, setCurrentAuthor] = useState(author);
 
   const nameRef = useRef<HTMLInputElement>(null);
 
@@ -40,23 +40,23 @@ export default function Page({ collection, submission }: Props) {
         process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
         { action: "submit" }
       );
-      const { submission } = await API.postSubmission({
+      const { author } = await API.postAuthor({
         collectionId,
         token,
         name: nameRef.current?.value || "",
         comment: "",
       });
-      setCurrentSubmission(submission);
+      setCurrentAuthor(author);
     },
     [collectionId]
   );
 
   const [creditImage, setCreditImage] = useState<ArrayBuffer>();
 
-  const [isOpenSubmission, setOpenSubmission] = useState(!!submission);
+  const [isOpenSubmission, setOpenSubmission] = useState(!!author);
   const openSubmission = useCallback(() => setOpenSubmission(true), []);
   const cancelSubmission = useCallback(async () => {
-    if (currentSubmission) {
+    if (currentAuthor) {
       if (!confirm("出展を取り消します。よろしいですか？")) {
         return;
       }
@@ -66,17 +66,17 @@ export default function Page({ collection, submission }: Props) {
         process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
         { action: "delete" }
       );
-      await API.deleteSubmission({
+      await API.deleteAuthor({
         collectionId,
         token,
       });
-      setCurrentSubmission(null);
+      setCurrentAuthor(null);
       setOpenSubmission(false);
       return;
     }
     grecaptcha.ready(async () => {});
     setOpenSubmission(false);
-  }, [collectionId, currentSubmission]);
+  }, [collectionId, currentAuthor]);
 
   return (
     <>
@@ -106,7 +106,7 @@ export default function Page({ collection, submission }: Props) {
               id="name"
               name="name"
               placeholder="投稿者名を入力する"
-              defaultValue={submission?.name || user?.name}
+              defaultValue={author?.name || user?.name}
               required
             />
             <label htmlFor="credit">クレジット画像: </label>
@@ -114,15 +114,15 @@ export default function Page({ collection, submission }: Props) {
             ※あとから変更できます
             <div className="flex flex-row gap-2">
               <BorderButton onClick={cancelSubmission}>
-                {currentSubmission ? "削除" : "キャンセル"}
+                {currentAuthor ? "削除" : "キャンセル"}
               </BorderButton>
               <FillButton type="submit" disabled={!creditImage}>
-                {currentSubmission ? "更新" : "出展登録"}
+                {currentAuthor ? "更新" : "出展登録"}
               </FillButton>
             </div>
           </form>
         )}
-        <div className="flex-1 flex flex-col justify-end">
+        <div className="flex flex-1 flex-col justify-end">
           <ReCaptchaCredit />
         </div>
       </Main>
@@ -163,12 +163,12 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     };
   }
 
-  const submission = (await getSubmission(userId, collectionId)) ?? null;
+  const author = (await Author.getAuthor(collectionId, userId)) ?? null;
 
   return {
     props: {
       collection,
-      submission,
+      author,
     },
   };
 };

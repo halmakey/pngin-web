@@ -1,17 +1,17 @@
-import type { Submission } from "@/models/Submission";
+import type { Author } from "@/models/Author";
 
 namespace API {
   export type NoBody = Record<never, never>;
-  export interface PostSubmissionRequestBody {
+  export interface PostAuthorRequestBody {
     collectionId: string;
     token: string;
     name: string;
     comment: string;
   }
-  export interface PostSubmissionResponseBody {
-    submission: Submission;
+  export interface PostAuthorResponseBody {
+    author: Author;
   }
-  export interface DeleteSubmissionRequestBody {
+  export interface DeleteAuthorRequestBody {
     collectionId: string;
     token: string;
   }

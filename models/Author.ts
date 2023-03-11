@@ -14,14 +14,14 @@ import {
   withCreatedUpdatedAt,
 } from "./client";
 
-export const type = "submission" as const;
-export type SubmissionID = `${string}:${string}`;
-export type PKey = `submission:${SubmissionID}`;
+export const type = "author" as const;
+export type AuthorID = `${string}:${string}`;
+export type PKey = `author:${AuthorID}`;
 
-export interface Submission {
+export interface Author {
   pkey: PKey;
   type: typeof type;
-  id: SubmissionID;
+  id: AuthorID;
   createdAt: string;
   updatedAt: string;
   name: string;
@@ -30,68 +30,65 @@ export interface Submission {
 }
 
 function getPKey(userId: string, collectionId: string): PKey {
-  return `submission:${getSubmissionID(userId, collectionId)}`;
+  return `author:${getAuthorID(collectionId, userId)}`;
 }
 
-export function getSubmissionID(
-  userId: string,
-  collectionId: string
-): SubmissionID {
+export function getAuthorID(collectionId: string, userId: string): AuthorID {
   return `${collectionId}:${userId}`;
 }
 
-export async function getSubmission(
-  userId: string,
-  collectionId: string
-): Promise<Submission | undefined> {
+export async function getAuthor(
+  collectionId: string,
+  userId: string
+): Promise<Author | undefined> {
   const result = await getClient().send(
     new GetItemCommand({
       TableName,
       Key: {
         pkey: {
-          S: getPKey(userId, collectionId),
+          S: getPKey(collectionId, userId),
         },
       },
     })
   );
-  return result.Item && (unmarshall(result.Item) as Submission);
+  return result.Item && (unmarshall(result.Item) as Author);
 }
 
-export async function createSubmission(
-  userId: string,
+export async function createAuthor(
   collectionId: string,
-  input: InputSource<Submission>
-): Promise<Submission> {
-  const id = getSubmissionID(userId, collectionId);
-  const submission = withCreatedUpdatedAt({
+  userId: string,
+  input: InputSource<Author>
+): Promise<Author> {
+  const id = getAuthorID(userId, collectionId);
+  const author = withCreatedUpdatedAt({
     ...input,
-    pkey: `submission:${id}` as const,
+    pkey: `author:${id}` as const,
     id,
     type,
   });
   await getClient().send(
     new PutItemCommand({
       TableName,
-      Item: marshall(submission),
+      Item: marshall(author),
       ConditionExpression: "attribute_not_exists(id)",
     })
   );
-  return submission;
+  return author;
 }
 
-export async function updateSubmission(
-  userId: string,
+export async function updateAuthor(
   collectionId: string,
+  userId: string,
   input: {
     name: string;
     comment: string;
     file?: string;
   }
-): Promise<Submission> {
+): Promise<Author> {
   const result = await getClient().send(
     new UpdateItemCommand({
       TableName,
-      Key: { pkey: { S: getPKey(userId, collectionId) } },
+      Key: { pkey: { S: getPKey(collectionId, userId) } },
       AttributeUpdates: {
         name: {
           Value: { S: input.name },
@@ -109,21 +106,15 @@ export async function updateSubmission(
       ReturnValues: ReturnValue.ALL_NEW,
     })
   );
-  return unmarshall(result.Attributes!) as Submission;
+  return unmarshall(result.Attributes!) as Author;
 }
 
-export async function deleteSubmission({
-  userId,
-  collectionId,
-}: {
-  userId: string;
-  collectionId: string;
-}) {
+export async function deleteAuthor(collectionId: string, userId: string) {
   await getClient()
     .send(
       new DeleteItemCommand({
         TableName,
-        Key: { pkey: { S: getPKey(userId, collectionId) } },
+        Key: { pkey: { S: getPKey(collectionId, userId) } },
       })
     )
     .catch(() => {
