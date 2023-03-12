@@ -32,36 +32,48 @@ export function useImageProcessor({ width, height }: Size) {
       setResult(undefined);
       return;
     }
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d");
-    if (!context) {
+    const globalCanvas = document.createElement("canvas");
+    const globalContext = globalCanvas.getContext("2d");
+    const localCanvas = document.createElement("canvas");
+    const localContext = localCanvas.getContext("2d");
+    if (!globalContext || !localContext) {
       throw new Error("Unexpected context");
     }
 
-    canvas.width = width;
-    canvas.height = height;
+    globalCanvas.width = width + 40;
+    globalCanvas.height = height + 40;
+    localCanvas.width = width;
+    localCanvas.height = height;
 
     const image = await loadImage(file);
     const ns = Math.min(width / image.width, height / image.height);
     const nsw = image.width * ns;
     const nsh = image.height * ns;
-    const nx = (canvas.width - nsw) * 0.5;
-    const ny = (canvas.height - nsh) * 0.5;
+    const nx = (width - nsw) * 0.5;
+    const ny = (height - nsh) * 0.5;
 
-    const ms = Math.max(width / image.width, height / image.height);
+    const ms = Math.max(
+      globalCanvas.width / image.width,
+      globalCanvas.height / image.height
+    );
     const msw = image.width * ms;
     const msh = image.height * ms;
-    const mx = (canvas.width - msw) * 0.5;
-    const my = (canvas.height - msh) * 0.5;
+    const mx = (globalCanvas.width - msw) * 0.5;
+    const my = (globalCanvas.height - msh) * 0.5;
 
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.filter = `blur(${Math.max(width, height) / 10}px)`;
-    context.drawImage(image, mx, my, msw, msh);
-    context.filter = "blur(1px)";
-    context.drawImage(image, nx, ny, nsw, nsh);
+    globalContext.filter = "blur(15px)";
+    globalContext.drawImage(image, mx, my, msw, msh);
+    localContext.fillStyle = "white";
+    localContext.fillRect(0, 0, localCanvas.width, localCanvas.height)
+    localContext.drawImage(
+      globalCanvas,
+      (globalCanvas.width - localCanvas.width) * -0.5,
+      (globalCanvas.height - localCanvas.height) * -0.5
+    );
+    localContext.drawImage(image, nx, ny, nsw, nsh);
     URL.revokeObjectURL(image.src);
     const blob = await new Promise<Blob | null>((resolve) =>
-      canvas.toBlob(resolve, "image/png")
+      localCanvas.toBlob(resolve, "image/png")
     );
     if (!blob) {
       throw new Error("Unexpected blob");
