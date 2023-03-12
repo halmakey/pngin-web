@@ -27,31 +27,38 @@ export default function Page({ collection, author }: Props) {
   const [currentAuthor, setCurrentAuthor] = useState(author);
 
   const nameRef = useRef<HTMLInputElement>(null);
+  const [uploadedImage, setUploadedImage] = useState<Blob>();
 
   const handleSubmit = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if (!nameRef.current) {
+      if (!nameRef.current || !uploadedImage) {
         return;
       }
 
+      const image = await API.postImage({
+        token: await grecaptcha.execute(
+          process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
+          { action: "postimage" }
+        ),
+      });
+
+      await API.postSignedUrl(image.post, uploadedImage);
       await new Promise<void>((resolve) => grecaptcha.ready(resolve));
-      const token = await grecaptcha.execute(
-        process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
-        { action: "submit" }
-      );
       const { author } = await API.putAuthor({
         collectionId,
-        token,
+        token: await grecaptcha.execute(
+          process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!,
+          { action: "submit" }
+        ),
         name: nameRef.current?.value || "",
         comment: "",
+        imageId: image.image.id,
       });
       setCurrentAuthor(author);
     },
-    [collectionId]
+    [collectionId, uploadedImage]
   );
-
-  const [creditImage, setCreditImage] = useState<ArrayBuffer>();
 
   const [isOpenSubmission, setOpenSubmission] = useState(!!author);
   const openSubmission = useCallback(() => setOpenSubmission(true), []);
@@ -110,13 +117,13 @@ export default function Page({ collection, author }: Props) {
               required
             />
             <label htmlFor="credit">クレジット画像: </label>
-            <SubmissionCredit onChange={setCreditImage} />
+            <SubmissionCredit onChange={setUploadedImage} />
             ※あとから変更できます
             <div className="flex flex-row gap-2">
               <BorderButton onClick={cancelSubmission}>
                 {currentAuthor ? "削除" : "キャンセル"}
               </BorderButton>
-              <FillButton type="submit" disabled={!creditImage}>
+              <FillButton type="submit" disabled={!uploadedImage}>
                 {currentAuthor ? "更新" : "出展登録"}
               </FillButton>
             </div>

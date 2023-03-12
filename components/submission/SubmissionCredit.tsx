@@ -15,7 +15,7 @@ const acceptTypes = fileTypes.join(",");
 export function SubmissionCredit({
   onChange,
 }: {
-  onChange?: (buffer: ArrayBuffer | undefined) => void;
+  onChange?: (blob: Blob | undefined) => void;
 }) {
   const creditRef = useRef<HTMLInputElement>(null);
   const { setFile: setCreditFile, result: creditImage } = useImageProcessor({
@@ -70,7 +70,7 @@ export function SubmissionCredit({
   );
 
   const creditImageSrc = useMemo(
-    () => creditImage && URL.createObjectURL(new Blob([creditImage])),
+    () => creditImage && URL.createObjectURL(creditImage),
     [creditImage]
   );
 

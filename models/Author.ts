@@ -53,7 +53,7 @@ export async function putAuthor(
   userId: string,
   input: InputSource<Author>
 ): Promise<Author> {
-  const id = getAuthorID(userId, collectionId);
+  const id = getAuthorID(collectionId, userId);
   const author: Author = {
     ...input,
     pkey: `author:${id}` as const,

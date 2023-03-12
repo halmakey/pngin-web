@@ -1,5 +1,6 @@
 import type { Author } from "@/models/Author";
 import type { Image } from "@/models/Image";
+import type { PresignedPost } from "@aws-sdk/s3-presigned-post";
 
 namespace API {
   export type NoBody = Record<never, never>;
@@ -21,7 +22,7 @@ namespace API {
     token: string;
   }
   export interface PostImageResponseBody {
-    signedUrl: string;
+    post: PresignedPost;
     image: Image;
   }
   export interface DeleteImageRequestBody {

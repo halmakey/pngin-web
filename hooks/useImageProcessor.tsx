@@ -25,7 +25,7 @@ async function loadImage(file: File) {
 
 export function useImageProcessor({ width, height }: Size) {
   const [file, setFile] = useState<File>();
-  const [result, setResult] = useState<ArrayBuffer>();
+  const [result, setResult] = useState<Blob>();
 
   useAsyncEffect(async () => {
     if (!file) {
@@ -78,8 +78,7 @@ export function useImageProcessor({ width, height }: Size) {
     if (!blob) {
       throw new Error("Unexpected blob");
     }
-    const buffer = await blob.arrayBuffer();
-    setResult(buffer);
+    setResult(blob);
   }, [file, height, width]);
 
   return useMemo(() => ({ setFile, result }), [result]);

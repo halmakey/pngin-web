@@ -1,4 +1,5 @@
 import { API } from "@/types/api";
+import type { PresignedPost } from "@aws-sdk/s3-presigned-post";
 import type { UserPayload } from "./token";
 
 async function request<Q = object, R = object>(
@@ -27,7 +28,7 @@ async function request<Q = object, R = object>(
 
 const client = {
   get<T>(url: string): Promise<T> {
-    return request("GET", url)
+    return request("GET", url);
   },
   post<Q = object, R = object>(url: string, body: Q): Promise<R> {
     return request("POST", url, body);
@@ -37,8 +38,8 @@ const client = {
   },
   delete<Q = object, R = object>(url: string, body: Q): Promise<R> {
     return request("DELETE", url, body);
-  }
-}
+  },
+};
 
 export function apiGetMe() {
   return client.get<UserPayload>("/api/user");
@@ -56,4 +57,36 @@ export async function deleteAuthor(body: API.DeleteAuthorRequestBody) {
     "/api/author",
     body
   );
+}
+
+export async function postImage(body: API.PostImageRequestBody) {
+  return client.post<API.PostImageRequestBody, API.PostImageResponseBody>(
+    "/api/image",
+    body
+  );
+}
+
+export async function deleteImage(body: API.DeleteImageRequestBody) {
+  return client.delete<API.DeleteImageRequestBody, API.NoBody>(
+    "/api/image",
+    body
+  );
+}
+
+export async function postSignedUrl(post: PresignedPost, blob: Blob) {
+  const body = Object.keys(post.fields).reduce((p, c) => {
+    p.append(c, post.fields[c])
+    return p
+  }, new FormData())
+  body.append(
+    'file',
+    blob
+  );
+  const res = await fetch(post.url, {
+    method: 'POST',
+    body
+  })
+  if (!res.ok) {
+    throw new Error(await res.text())
+  }
 }
