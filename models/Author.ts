@@ -23,7 +23,7 @@ export interface Author {
   imageId: string;
 }
 
-function getPKey(userId: string, collectionId: string): PKey {
+function getPKey(collectionId: string, userId: string): PKey {
   return `author:${getAuthorID(collectionId, userId)}`;
 }
 
