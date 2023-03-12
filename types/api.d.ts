@@ -7,6 +7,7 @@ namespace API {
     token: string;
     name: string;
     comment: string;
+    imageId: string;
   }
   export interface PutAuthorResponseBody {
     author: Author;

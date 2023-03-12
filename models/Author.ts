@@ -4,11 +4,7 @@ import {
   PutItemCommand,
 } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
-import {
-  getClient,
-  InputSource,
-  TableName,
-} from "./client";
+import { getClient, InputSource, TableName } from "./client";
 import { UserID } from "./User";
 
 export const type = "author" as const;
@@ -24,7 +20,7 @@ export interface Author {
   name: string;
   timestamp: number;
   comment: string;
-  imageId?: string;
+  imageId: string;
 }
 
 function getPKey(userId: string, collectionId: string): PKey {
