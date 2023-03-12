@@ -2,8 +2,6 @@ import {
   DeleteItemCommand,
   GetItemCommand,
   PutItemCommand,
-  ReturnValue,
-  UpdateItemCommand,
 } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import {
@@ -11,6 +9,7 @@ import {
   InputSource,
   TableName,
 } from "./client";
+import { UserID } from "./User";
 
 export const type = "author" as const;
 export type AuthorID = `${string}:${string}`;
@@ -20,6 +19,8 @@ export interface Author {
   pkey: PKey;
   type: typeof type;
   id: AuthorID;
+  collectionId: string;
+  userId: UserID;
   name: string;
   timestamp: number;
   comment: string;

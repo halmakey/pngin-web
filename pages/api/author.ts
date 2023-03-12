@@ -76,6 +76,8 @@ async function putAuthor(
   const author = await Author.putAuthor(collection.id, user.id, {
     name,
     comment,
+    userId: user.id,
+    collectionId
   });
 
   return res.json({ author });

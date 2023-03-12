@@ -19,7 +19,7 @@ export interface User {
   pkey: PKey;
   type: typeof type;
   timestamp: number;
-  id: string;
+  id: UserID;
   name: string;
   avatarUrl: string;
 }
