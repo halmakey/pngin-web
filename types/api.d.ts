@@ -1,4 +1,5 @@
 import type { Author } from "@/models/Author";
+import type { Image } from "@/models/Image";
 
 namespace API {
   export type NoBody = Record<never, never>;
@@ -15,5 +16,15 @@ namespace API {
   export interface DeleteAuthorRequestBody {
     collectionId: string;
     token: string;
+  }
+  export interface PostImageRequestBody {
+    token: string;
+  }
+  export interface PostImageResponseBody {
+    signedUrl: string;
+    image: Image;
+  }
+  export interface DeleteImageRequestBody {
+    imageId: string;
   }
 }
